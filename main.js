@@ -40,19 +40,21 @@ class Button {
     }
 
     isPressed() {
-        return mouseIsPressed && mouseX > this.x - this.w / 2 && mouseX < this.x + this.w / 2 && mouseY > this.y - this.h / 2 && mouseY < this.y + this.h / 2;
+        return mouseX > this.x - this.w / 2 && mouseX < this.x + this.w / 2 && mouseY > this.y - this.h / 2 && mouseY < this.y + this.h / 2;
     }
 }
 
 let state = "ready";
 let time = 0;
 let canPressButton = true;
+let buttonAnimTime = 0;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    frameRate(1000);
     startButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
     pauseButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
 }
@@ -60,22 +62,25 @@ function setup() {
 function draw() {
     background(30, 50, 55);
     if (state === "ready") {
+        buttonAnimTime += deltaTime;
+        if (buttonAnimTime < 160) {
+            startButton.rad = buttonAnimTime / 4 + 30;
+        } else {
+            startButton.rad = 70;
+        }
         drawTime(true);
         startButton.show();
-        if (startButton.isPressed() && canPressButton) {
-            canPressButton = false;
-            time = 0;
-            state = "timing";
-        }
     }
     if (state === "timing") {
         time += deltaTime;
+        buttonAnimTime += deltaTime;
+        if (buttonAnimTime < 160) {
+            pauseButton.rad = 70 - buttonAnimTime / 4;
+        } else {
+            pauseButton.rad = 30;
+        }
         drawTime(false);
         pauseButton.show();
-        if (pauseButton.isPressed() && canPressButton) {
-            canPressButton = false;
-            state = "ready";
-        }
     }
     if (state === "waiting") {
 
@@ -89,6 +94,17 @@ function windowResized() {
 }
 
 function mousePressed() {
+    if (state === "ready" && startButton.isPressed() && canPressButton) {
+        canPressButton = false;
+        time = 0;
+        buttonAnimTime = 0;
+        state = "timing";
+    }
+    if (state === "timing" && pauseButton.isPressed() && canPressButton) {
+        canPressButton = false;
+        buttonAnimTime = 0;
+        state = "ready";
+    }
     return false;
 }
 
