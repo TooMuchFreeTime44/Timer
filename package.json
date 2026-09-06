@@ -1,0 +1,24 @@
+{
+  "name": "a-timer",
+  "version": "1.0.0",
+  "description": "��J\u0000u\u0000s\u0000t\u0000 \u0000a\u0000 \u0000s\u0000i\u0000m\u0000p\u0000l\u0000e\u0000 \u0000t\u0000i\u0000m\u0000e\u0000r\u0000 \u0000a\u0000p\u0000p\u0000l\u0000i\u0000c\u0000a\u0000t\u0000i\u0000o\u0000n\u0000\r\u0000 \u0000",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TooMuchFreeTime44/Timer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/TooMuchFreeTime44/Timer/issues"
+  },
+  "homepage": "https://github.com/TooMuchFreeTime44/Timer#readme",
+  "devDependencies": {
+    "@types/p5": "^1.7.7"
+  }
+}
