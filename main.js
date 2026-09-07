@@ -46,12 +46,14 @@ class Button {
 
 let state = "ready";
 let time = 0;
+let laps = [];
 let canPressButton = true;
 let buttonAnimTime = 0;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
 let resetButton;
+let lapButton;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -85,6 +87,7 @@ function draw() {
         drawTime(false);
         pauseButton.show();
         resetButton.show();
+        lapButton.show();
     }
 }
 
@@ -107,7 +110,12 @@ function mousePressed() {
     if (((state === "ready" && time !== 0) || state === "timing") && resetButton.isPressed() && canPressButton) {
         canPressButton = false;
         time = 0;
+        laps = [];
         state = "ready";
+    }
+    if (state === "timing" && lapButton.isPressed() && canPressButton) {
+        canPressButton = false;
+        laps.push(time);
     }
     return false;
 }
@@ -117,9 +125,10 @@ function mouseReleased() {
 }
 
 function setButtons() {
-    startButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
-    pauseButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
-    resetButton = new Button(width / 2, height * 39 / 48, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Reset", height / 12, false, true);
+    startButton = new Button(width / 2, height * 30 / 48 - buttonStroke, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
+    pauseButton = new Button(width / 2, height * 30 / 48 - buttonStroke, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
+    resetButton = new Button(width / 2, height * 38 / 48 - buttonStroke, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Reset", height / 12, false, true);
+    lapButton = new Button(width / 2, height * 45 / 48 - buttonStroke, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Lap", height / 12, false, true);
 }
 
 function drawTime(isUsingMilli) {
@@ -127,7 +136,7 @@ function drawTime(isUsingMilli) {
     fill(255);
     noStroke();
     textAlign(CENTER, CENTER);
-    textSize(height / 6);
+    textSize(height / 12);
     textStyle(BOLD);
     let tempTime = time;
     let hour = floor(tempTime / 3600000);
@@ -141,22 +150,10 @@ function drawTime(isUsingMilli) {
     let milli = floor(tempTime);
     let timeString;
     if (isUsingMilli) {
-        if (hour > 0) {
-            timeString = `${hour}:${min}:${sec}.${dec}${milli}`;
-        } else if (min > 0) {
-            timeString = `${min}:${sec}.${dec}${milli}`;
-        } else {
-            timeString = `${sec}.${dec}${milli}`;
-        }
+        timeString = `${hour}:${min}:${sec}.${dec}${milli}`;
     } else {
-        if (hour > 0) {
-            timeString = `${hour}:${min}:${sec}.${dec}`;
-        } else if (min > 0) {
-            timeString = `${min}:${sec}.${dec}`;
-        } else {
-            timeString = `${sec}.${dec}`;
-        }
+        timeString = `${hour}:${min}:${sec}.${dec}`;
     }
-    text(timeString, width / 2, height * 13 / 48);
+    text(timeString, width / 2, height / 8);
     pop();
 }
