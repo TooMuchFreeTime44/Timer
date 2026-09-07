@@ -51,12 +51,12 @@ let buttonAnimTime = 0;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
+let resetButton;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     frameRate(1000);
-    startButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
-    pauseButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
+    setButtons();
 }
 
 function draw() {
@@ -70,6 +70,9 @@ function draw() {
         }
         drawTime(true);
         startButton.show();
+        if (time !== 0) {
+            resetButton.show();
+        }
     }
     if (state === "timing") {
         time += deltaTime;
@@ -81,22 +84,18 @@ function draw() {
         }
         drawTime(false);
         pauseButton.show();
-    }
-    if (state === "waiting") {
-
+        resetButton.show();
     }
 }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    startButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
-    pauseButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
+    setButtons();
 }
 
 function mousePressed() {
     if (state === "ready" && startButton.isPressed() && canPressButton) {
         canPressButton = false;
-        time = 0;
         buttonAnimTime = 0;
         state = "timing";
     }
@@ -105,11 +104,22 @@ function mousePressed() {
         buttonAnimTime = 0;
         state = "ready";
     }
+    if (((state === "ready" && time !== 0) || state === "timing") && resetButton.isPressed() && canPressButton) {
+        canPressButton = false;
+        time = 0;
+        state = "ready";
+    }
     return false;
 }
 
 function mouseReleased() {
     canPressButton = true;
+}
+
+function setButtons() {
+    startButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
+    pauseButton = new Button(width / 2, height * 5 / 8, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
+    resetButton = new Button(width / 2, height * 39 / 48, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Reset", height / 12, false, true);
 }
 
 function drawTime(isUsingMilli) {
