@@ -49,7 +49,7 @@ let state = "readyTimeZero";
 let time = 0;
 let laps = [];
 let buttonCornerAnimTime = 1000;
-let resetSlideAwayAnimTime = 1000;
+let resetSlideAnimTime = 1000;
 let buttonAnimTime = 160;
 let buttonStroke = 12;
 let startButton;
@@ -68,14 +68,14 @@ function draw() {
     background(30, 50, 55);
     if (state === "readyTimeZero") {
         buttonCornerAnimTime += deltaTime;
-        resetSlideAwayAnimTime += deltaTime;
+        resetSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < 160) {
             startButton.rad = buttonCornerAnimTime / 4 + 30;
         } else {
             startButton.rad = 70;
         }
-        if (resetSlideAwayAnimTime < 200) {
-            resetButton.y = height * 38 / 48 - (height / 6 / 200 * resetSlideAwayAnimTime) - buttonStroke;
+        if (resetSlideAnimTime < 200) {
+            resetButton.y = height * 38 / 48 - (height / 6 / 200 * resetSlideAnimTime) - buttonStroke;
             resetButton.show();
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
@@ -95,10 +95,16 @@ function draw() {
     } else if (state === "timing") {
         time += deltaTime;
         buttonCornerAnimTime += deltaTime;
+        resetSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < 160) {
             pauseButton.rad = 70 - buttonCornerAnimTime / 4;
         } else {
             pauseButton.rad = 30;
+        }
+        if (resetSlideAnimTime < 200) {
+            resetButton.y = height * 30 / 48 + (height / 6 / 200 * resetSlideAnimTime) - buttonStroke;
+        } else {
+            resetButton.y = height * 38 / 48 - buttonStroke;
         }
         drawTime(false);
         lapButton.show();
@@ -116,6 +122,7 @@ function mousePressed() {
     if (state === "readyTimeZero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
+        resetSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
@@ -127,12 +134,12 @@ function mousePressed() {
         laps = [];
         state = "readyTimeZero";
         buttonCornerAnimTime = 0;
-        resetSlideAwayAnimTime = 0;
+        resetSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
         laps = [];
         state = "readyTimeZero";
-        resetSlideAwayAnimTime = 0;
+        resetSlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
     }
