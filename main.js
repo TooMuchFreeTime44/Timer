@@ -99,11 +99,11 @@ function draw() {
         }
         if (lapSlideAnimTime < 200) {
             lapButton.y = height * 45 / 48 - (height * 7 / 48 / 200 * lapSlideAnimTime) - buttonStroke;
+            lapButton.show();
         } else {
             lapButton.y = height * 38 / 48 - buttonStroke;
         }
         drawTime(true);
-        lapButton.show();
         resetButton.show();
         startButton.show();
     } else if (state === "timing") {
