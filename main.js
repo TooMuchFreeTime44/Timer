@@ -75,8 +75,8 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        if (resetSlideAnimTime < 200) {
-            resetButton.y = height * 38 / 48 - (height / 6 / 200 * resetSlideAnimTime) - buttonStroke;
+        if (resetSlideAnimTime < 213.3) {
+            resetButton.y = height * 38 / 48 - (height / 6 / 213.3 * resetSlideAnimTime) - buttonStroke;
             resetButton.show();
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
@@ -97,8 +97,8 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        if (lapSlideAnimTime < 200) {
-            lapButton.y = height * 45 / 48 - (height * 7 / 48 / 200 * lapSlideAnimTime) - buttonStroke;
+        if (lapSlideAnimTime < 186.7) {
+            lapButton.y = height * 45 / 48 - (height * 7 / 48 / 186.7 * lapSlideAnimTime) - buttonStroke;
             lapButton.show();
         } else {
             lapButton.y = height * 38 / 48 - buttonStroke;
@@ -117,10 +117,10 @@ function draw() {
             pauseButton.rad = 30;
         }
         if (resetSlideAnimTime < 400) {
-            if (resetSlideAnimTime > 200) {
-                resetButton.y = height * 30 / 48 + (height / 6 / 200 * (resetSlideAnimTime - 200)) - buttonStroke;
+            if (resetSlideAnimTime > 213.3) {
+                resetButton.y = height * 30 / 48 + (height / 6 / 186.7 * (resetSlideAnimTime - 213.3)) - buttonStroke;
             } else {
-                resetButton.y = height * 30 / 48;
+                resetButton.y = height * 30 / 48 - buttonStroke;
             }
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
@@ -151,7 +151,7 @@ function mousePressed() {
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
-        lapSlideAnimTime = 200;
+        lapSlideAnimTime = 213.3;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         buttonCornerAnimTime = 0;
