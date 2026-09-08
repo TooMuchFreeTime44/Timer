@@ -151,7 +151,7 @@ function mousePressed() {
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
-        lapSlideAnimTime = 0;
+        lapSlideAnimTime = 200;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         buttonCornerAnimTime = 0;
