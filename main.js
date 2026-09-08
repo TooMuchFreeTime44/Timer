@@ -13,6 +13,7 @@ class Button {
         this.textHeight = textHeight;
         this.blackText = blackText;
         this.boldText = boldText;
+        this.activated = true;
     }
     
     show() {
@@ -40,15 +41,16 @@ class Button {
     }
 
     isPressed() {
-        return mouseX > this.x - this.w / 2 && mouseX < this.x + this.w / 2 && mouseY > this.y - this.h / 2 && mouseY < this.y + this.h / 2;
+        return this.activated && mouseX > this.x - this.w / 2 && mouseX < this.x + this.w / 2 && mouseY > this.y - this.h / 2 && mouseY < this.y + this.h / 2;
     }
 }
 
-let state = "ready";
+let state = "readyTimeZero";
 let time = 0;
 let laps = [];
-let canPressButton = true;
-let buttonAnimTime = 0;
+let buttonCornerAnimTime = 1000;
+let resetSlideAwayAnimTime = 1000;
+let buttonAnimTime = 160;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
@@ -58,36 +60,50 @@ let lapButton;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     frameRate(1000);
+    textFont("Varela Round");
     setButtons();
 }
 
 function draw() {
     background(30, 50, 55);
-    if (state === "ready") {
-        buttonAnimTime += deltaTime;
-        if (buttonAnimTime < 160) {
-            startButton.rad = buttonAnimTime / 4 + 30;
+    if (state === "readyTimeZero") {
+        buttonCornerAnimTime += deltaTime;
+        resetSlideAwayAnimTime += deltaTime;
+        if (buttonCornerAnimTime < 160) {
+            startButton.rad = buttonCornerAnimTime / 4 + 30;
+        } else {
+            startButton.rad = 70;
+        }
+        if (resetSlideAwayAnimTime < 200) {
+            resetButton.y = height * 38 / 48 - (height / 6 / 200 * resetSlideAwayAnimTime) - buttonStroke;
+            resetButton.show();
+        } else {
+            resetButton.y = height * 38 / 48 - buttonStroke;
+        }
+        drawTime(true);
+        startButton.show();
+    } else if (state === "readyTimeNonzero") {
+        buttonCornerAnimTime += deltaTime;
+        if (buttonCornerAnimTime < 160) {
+            startButton.rad = buttonCornerAnimTime / 4 + 30;
         } else {
             startButton.rad = 70;
         }
         drawTime(true);
+        resetButton.show();
         startButton.show();
-        if (time !== 0) {
-            resetButton.show();
-        }
-    }
-    if (state === "timing") {
+    } else if (state === "timing") {
         time += deltaTime;
-        buttonAnimTime += deltaTime;
-        if (buttonAnimTime < 160) {
-            pauseButton.rad = 70 - buttonAnimTime / 4;
+        buttonCornerAnimTime += deltaTime;
+        if (buttonCornerAnimTime < 160) {
+            pauseButton.rad = 70 - buttonCornerAnimTime / 4;
         } else {
             pauseButton.rad = 30;
         }
         drawTime(false);
-        pauseButton.show();
-        resetButton.show();
         lapButton.show();
+        resetButton.show();
+        pauseButton.show();
     }
 }
 
@@ -97,31 +113,30 @@ function windowResized() {
 }
 
 function mousePressed() {
-    if (state === "ready" && startButton.isPressed() && canPressButton) {
-        canPressButton = false;
-        buttonAnimTime = 0;
+    if (state === "readyTimeZero" && startButton.isPressed()) {
         state = "timing";
-    }
-    if (state === "timing" && pauseButton.isPressed() && canPressButton) {
-        canPressButton = false;
-        buttonAnimTime = 0;
-        state = "ready";
-    }
-    if (((state === "ready" && time !== 0) || state === "timing") && resetButton.isPressed() && canPressButton) {
-        canPressButton = false;
+        buttonCornerAnimTime = 0;
+    } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
+        state = "timing";
+        buttonCornerAnimTime = 0;
+    } else if (state === "timing" && pauseButton.isPressed()) {
+        state = "readyTimeNonzero";
+        buttonCornerAnimTime = 0;
+    } else if (state === "timing" && resetButton.isPressed()) {
         time = 0;
         laps = [];
-        state = "ready";
-    }
-    if (state === "timing" && lapButton.isPressed() && canPressButton) {
-        canPressButton = false;
+        state = "readyTimeZero";
+        buttonCornerAnimTime = 0;
+        resetSlideAwayAnimTime = 0;
+    } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
+        time = 0;
+        laps = [];
+        state = "readyTimeZero";
+        resetSlideAwayAnimTime = 0;
+    } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
     }
     return false;
-}
-
-function mouseReleased() {
-    canPressButton = true;
 }
 
 function setButtons() {
