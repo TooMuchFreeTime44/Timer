@@ -48,6 +48,7 @@ class Button {
 let state = "readyTimeZero";
 let time = 0;
 let laps = [];
+let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
@@ -75,14 +76,14 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        if (resetSlideAnimTime < 213.3) {
-            resetButton.y = height * 38 / 48 - (height / 6 / 213.3 * resetSlideAnimTime) - buttonStroke;
+        if (resetSlideAnimTime < slideAnimTotalTime * 8 / 15) {
+            resetButton.y = height * 38 / 48 - (height / 6 / (slideAnimTotalTime * 8 / 15) * resetSlideAnimTime) - buttonStroke;
             resetButton.show();
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
         }
-        if (lapSlideAnimTime < 400) {
-            lapButton.y = height * 45 / 48 - (height * 15 / 48 / 400 * lapSlideAnimTime) - buttonStroke;
+        if (lapSlideAnimTime < slideAnimTotalTime) {
+            lapButton.y = height * 45 / 48 - (height * 15 / 48 / slideAnimTotalTime * lapSlideAnimTime) - buttonStroke;
             lapButton.show();
         } else {
             lapButton.y = height * 30 / 48 - buttonStroke;
@@ -97,8 +98,8 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        if (lapSlideAnimTime < 186.7) {
-            lapButton.y = height * 45 / 48 - (height * 7 / 48 / 186.7 * lapSlideAnimTime) - buttonStroke;
+        if (lapSlideAnimTime < slideAnimTotalTime * 7 / 15) {
+            lapButton.y = height * 45 / 48 - (height * 7 / 48 / (slideAnimTotalTime * 7 / 15) * lapSlideAnimTime) - buttonStroke;
             lapButton.show();
         } else {
             lapButton.y = height * 38 / 48 - buttonStroke;
@@ -116,17 +117,17 @@ function draw() {
         } else {
             pauseButton.rad = 30;
         }
-        if (resetSlideAnimTime < 400) {
-            if (resetSlideAnimTime > 213.3) {
-                resetButton.y = height * 30 / 48 + (height / 6 / 186.7 * (resetSlideAnimTime - 213.3)) - buttonStroke;
+        if (resetSlideAnimTime < slideAnimTotalTime) {
+            if (resetSlideAnimTime > slideAnimTotalTime * 8 / 15) {
+                resetButton.y = height * 30 / 48 + (height / 6 / (slideAnimTotalTime * 7 / 15) * (resetSlideAnimTime - slideAnimTotalTime * 8 / 15)) - buttonStroke;
             } else {
                 resetButton.y = height * 30 / 48 - buttonStroke;
             }
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
         }
-        if (lapSlideAnimTime < 400) {
-            lapButton.y = height * 30 / 48 + (height * 15 / 48 / 400 * lapSlideAnimTime) - buttonStroke;
+        if (lapSlideAnimTime < slideAnimTotalTime) {
+            lapButton.y = height * 30 / 48 + (height * 15 / 48 / slideAnimTotalTime * lapSlideAnimTime) - buttonStroke;
         } else {
             lapButton.y = height * 45 / 48 - buttonStroke;
         }
@@ -151,7 +152,7 @@ function mousePressed() {
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
-        lapSlideAnimTime = 213.3;
+        lapSlideAnimTime = slideAnimTotalTime * 8 / 15;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         buttonCornerAnimTime = 0;
