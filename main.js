@@ -50,7 +50,7 @@ let time = 0;
 let laps = [];
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
-let buttonAnimTime = 160;
+let lapSlideAnimTime = 1000;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
@@ -69,6 +69,7 @@ function draw() {
     if (state === "readyTimeZero") {
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
+        lapSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < 160) {
             startButton.rad = buttonCornerAnimTime / 4 + 30;
         } else {
@@ -80,31 +81,54 @@ function draw() {
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
         }
+        if (lapSlideAnimTime < 400) {
+            lapButton.y = height * 45 / 48 - (height * 15 / 48 / 400 * lapSlideAnimTime) - buttonStroke;
+            lapButton.show();
+        } else {
+            lapButton.y = height * 30 / 48 - buttonStroke;
+        }
         drawTime(true);
         startButton.show();
     } else if (state === "readyTimeNonzero") {
         buttonCornerAnimTime += deltaTime;
+        lapSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < 160) {
             startButton.rad = buttonCornerAnimTime / 4 + 30;
         } else {
             startButton.rad = 70;
         }
+        if (lapSlideAnimTime < 200) {
+            lapButton.y = height * 45 / 48 - (height * 7 / 48 / 200 * lapSlideAnimTime) - buttonStroke;
+        } else {
+            lapButton.y = height * 38 / 48 - buttonStroke;
+        }
         drawTime(true);
+        lapButton.show();
         resetButton.show();
         startButton.show();
     } else if (state === "timing") {
         time += deltaTime;
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
+        lapSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < 160) {
             pauseButton.rad = 70 - buttonCornerAnimTime / 4;
         } else {
             pauseButton.rad = 30;
         }
-        if (resetSlideAnimTime < 200) {
-            resetButton.y = height * 30 / 48 + (height / 6 / 200 * resetSlideAnimTime) - buttonStroke;
+        if (resetSlideAnimTime < 400) {
+            if (resetSlideAnimTime > 200) {
+                resetButton.y = height * 30 / 48 + (height / 6 / 200 * (resetSlideAnimTime - 200)) - buttonStroke;
+            } else {
+                resetButton.y = height * 30 / 48;
+            }
         } else {
             resetButton.y = height * 38 / 48 - buttonStroke;
+        }
+        if (lapSlideAnimTime < 400) {
+            lapButton.y = height * 30 / 48 + (height * 15 / 48 / 400 * lapSlideAnimTime) - buttonStroke;
+        } else {
+            lapButton.y = height * 45 / 48 - buttonStroke;
         }
         drawTime(false);
         lapButton.show();
@@ -123,18 +147,22 @@ function mousePressed() {
         state = "timing";
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
+        lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
+        lapSlideAnimTime = 0;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         buttonCornerAnimTime = 0;
+        lapSlideAnimTime = 0;
     } else if (state === "timing" && resetButton.isPressed()) {
         time = 0;
         laps = [];
         state = "readyTimeZero";
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
+        lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
         laps = [];
