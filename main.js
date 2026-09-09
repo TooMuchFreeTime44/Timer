@@ -104,6 +104,7 @@ function draw() {
         } else {
             lapButton.y = height * 38 / 48 - buttonStroke;
         }
+        drawLaps();
         drawTime(true);
         resetButton.show();
         startButton.show();
@@ -131,6 +132,7 @@ function draw() {
         } else {
             lapButton.y = height * 45 / 48 - buttonStroke;
         }
+        drawLaps();
         drawTime(false);
         lapButton.show();
         resetButton.show();
@@ -190,8 +192,6 @@ function drawTime(isUsingMilli) {
     textSize(height / 12);
     textStyle(BOLD);
     let tempTime = time;
-    let hour = floor(tempTime / 3600000);
-    tempTime -= hour * 3600000;
     let min = floor(tempTime / 60000);
     tempTime -= min * 60000;
     let sec = floor(tempTime / 1000);
@@ -201,10 +201,38 @@ function drawTime(isUsingMilli) {
     let milli = floor(tempTime);
     let timeString;
     if (isUsingMilli) {
-        timeString = `${hour}:${min}:${sec}.${dec}${milli}`;
+        if (sec < 10) {
+            if (min < 10) {
+                timeString = `0${min}:0${sec}.${dec}${milli}`;
+            } else {
+                timeString = `${min}:0${sec}.${dec}${milli}`;
+            }
+        } else {
+            if (min < 10) {
+                timeString = `0${min}:${sec}.${dec}${milli}`;
+            } else {
+                timeString = `${min}:${sec}.${dec}${milli}`;
+            }
+        }
     } else {
-        timeString = `${hour}:${min}:${sec}.${dec}`;
+        if (sec < 10) {
+            if (min < 10) {
+                timeString = `0${min}:0${sec}.${dec}`;
+            } else {
+                timeString = `${min}:0${sec}.${dec}`;
+            }
+        } else {
+            if (min < 10) {
+                timeString = `0${min}:${sec}.${dec}`;
+            } else {
+                timeString = `${min}:${sec}.${dec}`;
+            }
+        }
     }
     text(timeString, width / 2, height / 8);
     pop();
+}
+
+function drawLaps() {
+
 }
