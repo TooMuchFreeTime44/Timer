@@ -35,7 +35,6 @@ class Button {
         }
         noStroke();
         textSize(this.textHeight);
-        textAlign(CENTER, CENTER);
         text(this.message, 0, 5);
         pop();
     }
@@ -47,12 +46,12 @@ class Button {
 
 let state = "readyTimeZero";
 let time = 0;
-let laps = [];
+let laps = [0];
 let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
-let buttonStroke = 12;
+let buttonStroke = 14;
 let startButton;
 let pauseButton;
 let resetButton;
@@ -62,6 +61,8 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     frameRate(1000);
     textFont("Varela Round");
+    textAlign(CENTER, CENTER);
+    noStroke();
     setButtons();
 }
 
@@ -161,14 +162,14 @@ function mousePressed() {
         lapSlideAnimTime = 0;
     } else if (state === "timing" && resetButton.isPressed()) {
         time = 0;
-        laps = [];
+        laps = [0];
         state = "readyTimeZero";
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
         lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
-        laps = [];
+        laps = [0];
         state = "readyTimeZero";
         resetSlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
@@ -187,8 +188,6 @@ function setButtons() {
 function drawTime(isUsingMilli) {
     push();
     fill(255);
-    noStroke();
-    textAlign(CENTER, CENTER);
     textSize(height / 12);
     textStyle(BOLD);
     let tempTime = time;
@@ -234,5 +233,52 @@ function drawTime(isUsingMilli) {
 }
 
 function drawLaps() {
-
+    push();
+    fill(255);
+    textSize(height * 4 / 125);
+    textStyle(BOLD);
+    textAlign(LEFT, CENTER);
+    if (laps.length > 1) {
+        for (let i = 1; i < laps.length; i++) {
+            let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
+            text(i, width * 3 / 32, y);
+            let tempTime = laps[i] - laps[i - 1];
+            let min = floor(tempTime / 60000);
+            tempTime -= min * 60000;
+            let sec = floor(tempTime / 1000);
+            tempTime -= sec * 1000;
+            let dec = floor(tempTime / 10);
+            let timeString;
+            if (min < 1) {
+                timeString = `${sec}.${dec}`;
+            } else {
+                if (sec < 10) {
+                    timeString = `${min}:0${sec}.${dec}`;
+                } else {
+                    timeString = `${min}:${sec}.${dec}`;
+                }
+            }
+            text(timeString, width / 4, y);
+            tempTime = laps[i];
+            min = floor(tempTime / 60000);
+            tempTime -= min * 60000;
+            sec = floor(tempTime / 1000);
+            tempTime -= sec * 1000;
+            dec = floor(tempTime / 10);
+            if (min < 1) {
+                timeString = `${sec}.${dec}`;
+            } else {
+                if (sec < 10) {
+                    timeString = `${min}:0${sec}.${dec}`;
+                } else {
+                    timeString = `${min}:${sec}.${dec}`;
+                }
+            }
+            text(timeString, width * 5 / 8, y);
+        }
+    }
+    fill(30, 50, 55);
+    rect(0, 0, width, height / 5);
+    rect(0, height * 7 / 15, width, height * 8 / 15);
+    pop();
 }
