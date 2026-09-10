@@ -84,13 +84,14 @@ function draw() {
         let frictionThisFrame = lapScrollFrictionPerSec ** (deltaTime / 1000);
         lapScrollVel *= frictionThisFrame;
         lapScrollOffset += lapScrollVel;
-        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75);
+        let extraScrollMargin = height / 60;
+        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75) + extraScrollMargin;
         if (lapScrollOffset < maxScroll) {
             lapScrollOffset = maxScroll;
             lapScrollVel = 0;
         }
-        if (lapScrollOffset > 0) {
-            lapScrollOffset = 0;
+        if (lapScrollOffset > -extraScrollMargin * 1.5) {
+            lapScrollOffset = -extraScrollMargin * 1.5;
             lapScrollVel = 0;
         }
     }
