@@ -55,6 +55,8 @@ let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
+let topMaskingGradient;
+let bottomMaskingGradient;
 let buttonStroke = 12;
 let startButton;
 let pauseButton;
@@ -68,6 +70,12 @@ function setup() {
     textAlign(CENTER, CENTER);
     noStroke();
     setButtons();
+    topMaskingGradient = drawingContext.createLinearGradient(0, height / 6, 0, height / 5);
+    topMaskingGradient.addColorStop(0, color(30, 50, 55, 255).toString());
+    topMaskingGradient.addColorStop(1, color(30, 50, 55, 0).toString());
+    bottomMaskingGradient = drawingContext.createLinearGradient(0, height * 7 / 15, 0, height / 2);
+    bottomMaskingGradient.addColorStop(0, color(30, 50, 55, 0).toString());
+    bottomMaskingGradient.addColorStop(1, color(30, 50, 55, 255).toString());
 }
 
 function draw() {
@@ -289,12 +297,24 @@ function drawLaps() {
             let dec = floor(tempTime / 10);
             let timeString;
             if (min < 1) {
-                timeString = `${sec}.${dec}`;
+                if (dec < 10) {
+                    timeString = `${sec}.0${dec}`;
+                } else {
+                    timeString = `${sec}.${dec}`;
+                }
             } else {
                 if (sec < 10) {
-                    timeString = `${min}:0${sec}.${dec}`;
+                    if (dec < 10) {
+                        timeString = `${min}:0${sec}.0${dec}`;
+                    } else {
+                        timeString = `${min}:0${sec}.${dec}`;
+                    }
                 } else {
-                    timeString = `${min}:${sec}.${dec}`;
+                    if (dec < 10) {
+                        timeString = `${min}:${sec}.0${dec}`;
+                    } else {
+                        timeString = `${min}:${sec}.${dec}`;
+                    }
                 }
             }
             text(timeString, width / 4, y);
@@ -305,20 +325,36 @@ function drawLaps() {
             tempTime -= sec * 1000;
             dec = floor(tempTime / 10);
             if (min < 1) {
-                timeString = `${sec}.${dec}`;
+                if (dec < 10) {
+                    timeString = `${sec}.0${dec}`;
+                } else {
+                    timeString = `${sec}.${dec}`;
+                }
             } else {
                 if (sec < 10) {
-                    timeString = `${min}:0${sec}.${dec}`;
+                    if (dec < 10) {
+                        timeString = `${min}:0${sec}.0${dec}`;
+                    } else {
+                        timeString = `${min}:0${sec}.${dec}`;
+                    }
                 } else {
-                    timeString = `${min}:${sec}.${dec}`;
+                    if (dec < 10) {
+                        timeString = `${min}:${sec}.0${dec}`;
+                    } else {
+                        timeString = `${min}:${sec}.${dec}`;
+                    }
                 }
             }
             text(timeString, width * 5 / 8, y);
         }
         pop();
+        drawingContext.fillStyle = topMaskingGradient;
+        rect(0, height / 6, width, height / 30);
+        drawingContext.fillStyle = bottomMaskingGradient;
+        rect(0, height * 7 / 15, width, height / 30);
         fill(30, 50, 55);
-        rect(0, 0, width, height / 5);
-        rect(0, height * 7 / 15, width, height * 8 / 15);
+        rect(0, 0, width, height / 6);
+        rect(0, height / 2, width, height / 2);
         pop();
     }
 }
