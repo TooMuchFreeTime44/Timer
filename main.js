@@ -188,7 +188,8 @@ function touchMoved() {
         let deltaY = mouseY - pmouseY;
         lapScrollOffset += deltaY;
         if (laps.length <= 6) lapScrollOffset = 0;
-        //if (lapScrollOffset < -(laps.length + 6) * height * 4 / 75 - height * 4 / 15) lapScrollOffset = -(laps.length + 6) * height * 4 / 75 - height * 4 / 15;
+        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75);
+        if (lapScrollOffset < maxScroll) lapScrollOffset = maxScroll;
         if (lapScrollOffset > 0) lapScrollOffset = 0;
     }
 }
