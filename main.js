@@ -278,9 +278,10 @@ function drawLaps() {
         push();
         translate(0, lapScrollOffset);
         for (let i = 1; i < laps.length; i++) {
+            let ii = laps.length - i;
             let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
-            text(i, width * 3 / 32, y);
-            let tempTime = laps[i] - laps[i - 1];
+            text(ii, width * 3 / 32, y);
+            let tempTime = laps[ii] - laps[ii - 1];
             let min = floor(tempTime / 60000);
             tempTime -= min * 60000;
             let sec = floor(tempTime / 1000);
@@ -297,7 +298,7 @@ function drawLaps() {
                 }
             }
             text(timeString, width / 4, y);
-            tempTime = laps[i];
+            tempTime = laps[ii];
             min = floor(tempTime / 60000);
             tempTime -= min * 60000;
             sec = floor(tempTime / 1000);
