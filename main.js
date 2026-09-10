@@ -111,13 +111,13 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
+        drawLaps();
         if (lapSlideAnimTime < slideAnimTotalTime * 7 / 15) {
             lapButton.y = height * 45 / 48 - (height * 7 / 48 / (slideAnimTotalTime * 7 / 15) * lapSlideAnimTime) - buttonStroke;
             lapButton.show();
         } else {
             lapButton.y = height * 38 / 48 - buttonStroke;
         }
-        drawLaps();
         drawTime(true);
         resetButton.show();
         startButton.show();
