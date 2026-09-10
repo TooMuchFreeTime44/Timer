@@ -47,6 +47,8 @@ class Button {
 let state = "readyTimeZero";
 let time = 0;
 let laps = [0];
+let isScrolling = false;
+let lapScrollOffset = 0;
 let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
@@ -146,7 +148,10 @@ function windowResized() {
     setButtons();
 }
 
-function mousePressed() {
+function touchStarted() {
+    if ((state === "readyTimeNonzero" || state === "timing")) {
+        isScrolling = true;
+    }
     if (state === "readyTimeZero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
@@ -176,6 +181,20 @@ function mousePressed() {
         laps.push(time);
     }
     return false;
+}
+
+function touchMoved() {
+    if (isScrolling) {
+        let deltaY = mouseY - pmouseY;
+        lapScrollOffset += deltaY;
+        if (laps.length <= 6) lapScrollOffset = 0;
+        //if (lapScrollOffset < -(laps.length + 6) * height * 4 / 75 - height * 4 / 15) lapScrollOffset = -(laps.length + 6) * height * 4 / 75 - height * 4 / 15;
+        if (lapScrollOffset > 0) lapScrollOffset = 0;
+    }
+}
+
+function touchEnded() {
+    isScrolling = false;
 }
 
 function setButtons() {
@@ -239,6 +258,8 @@ function drawLaps() {
         textSize(height * 4 / 125);
         textStyle(BOLD);
         textAlign(LEFT, CENTER);
+        push();
+        translate(0, lapScrollOffset);
         for (let i = 1; i < laps.length; i++) {
             let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
             text(i, width * 3 / 32, y);
@@ -276,6 +297,7 @@ function drawLaps() {
             }
             text(timeString, width * 5 / 8, y);
         }
+        pop();
         fill(30, 50, 55);
         rect(0, 0, width, height / 5);
         rect(0, height * 7 / 15, width, height * 8 / 15);
