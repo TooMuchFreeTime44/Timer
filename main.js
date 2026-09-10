@@ -51,7 +51,7 @@ let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
-let buttonStroke = 14;
+let buttonStroke = 12;
 let startButton;
 let pauseButton;
 let resetButton;
@@ -233,12 +233,12 @@ function drawTime(isUsingMilli) {
 }
 
 function drawLaps() {
-    push();
-    fill(255);
-    textSize(height * 4 / 125);
-    textStyle(BOLD);
-    textAlign(LEFT, CENTER);
     if (laps.length > 1) {
+        push();
+        fill(255);
+        textSize(height * 4 / 125);
+        textStyle(BOLD);
+        textAlign(LEFT, CENTER);
         for (let i = 1; i < laps.length; i++) {
             let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
             text(i, width * 3 / 32, y);
@@ -276,9 +276,9 @@ function drawLaps() {
             }
             text(timeString, width * 5 / 8, y);
         }
+        fill(30, 50, 55);
+        rect(0, 0, width, height / 5);
+        rect(0, height * 7 / 15, width, height * 8 / 15);
+        pop();
     }
-    fill(30, 50, 55);
-    rect(0, 0, width, height / 5);
-    rect(0, height * 7 / 15, width, height * 8 / 15);
-    pop();
 }
