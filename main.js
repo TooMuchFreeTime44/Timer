@@ -77,8 +77,14 @@ function draw() {
         lapScrollVel *= frictionThisFrame;
         lapScrollOffset += lapScrollVel;
         let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75);
-        if (lapScrollOffset < maxScroll) lapScrollOffset = maxScroll;
-        if (lapScrollOffset > 0) lapScrollOffset = 0;
+        if (lapScrollOffset < maxScroll) {
+            lapScrollOffset = maxScroll;
+            lapScrollVel = 0;
+        }
+        if (lapScrollOffset > 0) {
+            lapScrollOffset = 0;
+            lapScrollVel = 0;
+        }
     }
     if (state === "readyTimeZero") {
         buttonCornerAnimTime += deltaTime;
