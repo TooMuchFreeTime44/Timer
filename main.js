@@ -49,6 +49,8 @@ let time = 0;
 let laps = [0];
 let isScrolling = false;
 let lapScrollOffset = 0;
+let lapScrollVel = 0;
+let lapScrollFrictionPerSec = 0.01;
 let slideAnimTotalTime = 210;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
@@ -70,6 +72,14 @@ function setup() {
 
 function draw() {
     background(30, 50, 55);
+    if (state === "timing" || state === "readyTimeNonzero") {
+        let frictionThisFrame = lapScrollFrictionPerSec ** (deltaTime / 1000);
+        lapScrollVel *= frictionThisFrame;
+        lapScrollOffset += lapScrollVel;
+        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75);
+        if (lapScrollOffset < maxScroll) lapScrollOffset = maxScroll;
+        if (lapScrollOffset > 0) lapScrollOffset = 0;
+    }
     if (state === "readyTimeZero") {
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
@@ -149,7 +159,7 @@ function windowResized() {
 }
 
 function touchStarted() {
-    if ((state === "readyTimeNonzero" || state === "timing")) {
+    if ((state === "readyTimeNonzero" || state === "timing") && mouseY > height / 5 && mouseY < height * 7 / 15) {
         isScrolling = true;
     }
     if (state === "readyTimeZero" && startButton.isPressed()) {
@@ -168,6 +178,8 @@ function touchStarted() {
     } else if (state === "timing" && resetButton.isPressed()) {
         time = 0;
         laps = [0];
+        lapScrollOffset = 0;
+        lapScrollVel = 0;
         state = "readyTimeZero";
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
@@ -175,6 +187,8 @@ function touchStarted() {
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
         laps = [0];
+        lapScrollOffset = 0;
+        lapScrollVel = 0;
         state = "readyTimeZero";
         resetSlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
@@ -186,11 +200,7 @@ function touchStarted() {
 function touchMoved() {
     if (isScrolling) {
         let deltaY = mouseY - pmouseY;
-        lapScrollOffset += deltaY;
-        if (laps.length <= 6) lapScrollOffset = 0;
-        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75);
-        if (lapScrollOffset < maxScroll) lapScrollOffset = maxScroll;
-        if (lapScrollOffset > 0) lapScrollOffset = 0;
+        lapScrollVel += (deltaY - lapScrollVel) / 2;
     }
 }
 
