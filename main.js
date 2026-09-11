@@ -52,6 +52,7 @@ let lapScrollOffset = 0;
 let lapScrollVel = 0;
 let lapScrollFrictionPerSec = 0.01;
 let slideAnimTotalTime = 210;
+let cornerAnimTotalTime = 100;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
@@ -99,8 +100,8 @@ function draw() {
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
-        if (buttonCornerAnimTime < 160) {
-            startButton.rad = buttonCornerAnimTime / 4 + 30;
+        if (buttonCornerAnimTime < cornerAnimTotalTime) {
+            startButton.rad = buttonCornerAnimTime * 40 / cornerAnimTotalTime + 30;
         } else {
             startButton.rad = 70;
         }
@@ -121,8 +122,8 @@ function draw() {
     } else if (state === "readyTimeNonzero") {
         buttonCornerAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
-        if (buttonCornerAnimTime < 160) {
-            startButton.rad = buttonCornerAnimTime / 4 + 30;
+        if (buttonCornerAnimTime < cornerAnimTotalTime) {
+            startButton.rad = buttonCornerAnimTime * 40 / cornerAnimTotalTime + 30;
         } else {
             startButton.rad = 70;
         }
@@ -141,8 +142,8 @@ function draw() {
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
-        if (buttonCornerAnimTime < 160) {
-            pauseButton.rad = 70 - buttonCornerAnimTime / 4;
+        if (buttonCornerAnimTime < cornerAnimTotalTime) {
+            pauseButton.rad = 70 - buttonCornerAnimTime * 40 / cornerAnimTotalTime;
         } else {
             pauseButton.rad = 30;
         }
