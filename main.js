@@ -56,6 +56,9 @@ let cornerAnimTotalTime = 100;
 let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
+let lapDisplaySlideAnimTime = 1000;
+let lapDisplaySlideTotalTime = 200;
+let singleSlideTime = 100;
 let topMaskingGradient;
 let bottomMaskingGradient;
 let buttonStroke = 12;
@@ -100,6 +103,7 @@ function draw() {
         buttonCornerAnimTime += deltaTime;
         resetSlideAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
+        lapDisplaySlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < cornerAnimTotalTime) {
             startButton.rad = buttonCornerAnimTime * 40 / cornerAnimTotalTime + 30;
         } else {
@@ -117,6 +121,12 @@ function draw() {
         } else {
             lapButton.y = height * 30 / 48 - buttonStroke;
         }
+        if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
+            drawLaps(lapDisplaySlideAnimTime);
+        } else {
+            laps = [0];
+            lapScrollOffset = 0;
+        }
         drawTime(true);
         startButton.show();
     } else if (state === "readyTimeNonzero") {
@@ -127,7 +137,7 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        drawLaps();
+        drawLaps(lapDisplaySlideAnimTime);
         if (lapSlideAnimTime < slideAnimTotalTime * 7 / 15) {
             lapButton.y = height * 45 / 48 - (height * 7 / 48 / (slideAnimTotalTime * 7 / 15) * lapSlideAnimTime) - buttonStroke;
             lapButton.show();
@@ -161,7 +171,7 @@ function draw() {
         } else {
             lapButton.y = height * 45 / 48 - buttonStroke;
         }
-        drawLaps();
+        drawLaps(lapDisplaySlideAnimTime);
         drawTime(false);
         lapButton.show();
         resetButton.show();
@@ -180,6 +190,8 @@ function touchStarted() {
     }
     if (state === "readyTimeZero" && startButton.isPressed()) {
         state = "timing";
+        laps = [0];
+        lapScrollOffset = 0;
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
         lapSlideAnimTime = 0;
@@ -193,8 +205,6 @@ function touchStarted() {
         lapSlideAnimTime = 0;
     } else if (state === "timing" && resetButton.isPressed()) {
         time = 0;
-        laps = [0];
-        lapScrollOffset = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
         buttonCornerAnimTime = 0;
@@ -202,8 +212,6 @@ function touchStarted() {
         lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
-        laps = [0];
-        lapScrollOffset = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
         resetSlideAnimTime = 0;
@@ -278,7 +286,7 @@ function drawTime(isUsingMilli) {
     pop();
 }
 
-function drawLaps() {
+function drawLaps(animTime) {
     if (laps.length > 1) {
         push();
         fill(255);
@@ -287,67 +295,134 @@ function drawLaps() {
         textAlign(LEFT, CENTER);
         push();
         translate(0, lapScrollOffset);
-        for (let i = 1; i < laps.length; i++) {
-            let ii = laps.length - i;
-            let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
-            text(ii, width * 3 / 32, y);
-            let tempTime = laps[ii] - laps[ii - 1];
-            let min = floor(tempTime / 60000);
-            tempTime -= min * 60000;
-            let sec = floor(tempTime / 1000);
-            tempTime -= sec * 1000;
-            let dec = floor(tempTime / 10);
-            let timeString;
-            if (min < 1) {
-                if (dec < 10) {
-                    timeString = `${sec}.0${dec}`;
-                } else {
-                    timeString = `${sec}.${dec}`;
-                }
-            } else {
-                if (sec < 10) {
+        if (state === "readyTimeZero") {
+            for (let i = 1; i < laps.length; i++) {
+                push();
+                let ii = laps.length - i;
+                let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
+                text(ii, width * 3 / 32, y);
+                let tempTime = laps[ii] - laps[ii - 1];
+                let min = floor(tempTime / 60000);
+                tempTime -= min * 60000;
+                let sec = floor(tempTime / 1000);
+                tempTime -= sec * 1000;
+                let dec = floor(tempTime / 10);
+                let timeString;
+                if (min < 1) {
                     if (dec < 10) {
-                        timeString = `${min}:0${sec}.0${dec}`;
+                        timeString = `${sec}.0${dec}`;
                     } else {
-                        timeString = `${min}:0${sec}.${dec}`;
+                        timeString = `${sec}.${dec}`;
                     }
                 } else {
-                    if (dec < 10) {
-                        timeString = `${min}:${sec}.0${dec}`;
+                    if (sec < 10) {
+                        if (dec < 10) {
+                            timeString = `${min}:0${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:0${sec}.${dec}`;
+                        }
                     } else {
-                        timeString = `${min}:${sec}.${dec}`;
+                        if (dec < 10) {
+                            timeString = `${min}:${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:${sec}.${dec}`;
+                        }
                     }
                 }
+                text(timeString, width / 4, y);
+                tempTime = laps[ii];
+                min = floor(tempTime / 60000);
+                tempTime -= min * 60000;
+                sec = floor(tempTime / 1000);
+                tempTime -= sec * 1000;
+                dec = floor(tempTime / 10);
+                if (min < 1) {
+                    if (dec < 10) {
+                        timeString = `${sec}.0${dec}`;
+                    } else {
+                        timeString = `${sec}.${dec}`;
+                    }
+                } else {
+                    if (sec < 10) {
+                        if (dec < 10) {
+                            timeString = `${min}:0${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:0${sec}.${dec}`;
+                        }
+                    } else {
+                        if (dec < 10) {
+                            timeString = `${min}:${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:${sec}.${dec}`;
+                        }
+                    }
+                }
+                text(timeString, width * 5 / 8, y);
+                pop();
             }
-            text(timeString, width / 4, y);
-            tempTime = laps[ii];
-            min = floor(tempTime / 60000);
-            tempTime -= min * 60000;
-            sec = floor(tempTime / 1000);
-            tempTime -= sec * 1000;
-            dec = floor(tempTime / 10);
-            if (min < 1) {
-                if (dec < 10) {
-                    timeString = `${sec}.0${dec}`;
-                } else {
-                    timeString = `${sec}.${dec}`;
-                }
-            } else {
-                if (sec < 10) {
+        } else {
+            for (let i = 1; i < laps.length; i++) {
+                let ii = laps.length - i;
+                let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
+                text(ii, width * 3 / 32, y);
+                let tempTime = laps[ii] - laps[ii - 1];
+                let min = floor(tempTime / 60000);
+                tempTime -= min * 60000;
+                let sec = floor(tempTime / 1000);
+                tempTime -= sec * 1000;
+                let dec = floor(tempTime / 10);
+                let timeString;
+                if (min < 1) {
                     if (dec < 10) {
-                        timeString = `${min}:0${sec}.0${dec}`;
+                        timeString = `${sec}.0${dec}`;
                     } else {
-                        timeString = `${min}:0${sec}.${dec}`;
+                        timeString = `${sec}.${dec}`;
                     }
                 } else {
-                    if (dec < 10) {
-                        timeString = `${min}:${sec}.0${dec}`;
+                    if (sec < 10) {
+                        if (dec < 10) {
+                            timeString = `${min}:0${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:0${sec}.${dec}`;
+                        }
                     } else {
-                        timeString = `${min}:${sec}.${dec}`;
+                        if (dec < 10) {
+                            timeString = `${min}:${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:${sec}.${dec}`;
+                        }
                     }
                 }
+                text(timeString, width / 4, y);
+                tempTime = laps[ii];
+                min = floor(tempTime / 60000);
+                tempTime -= min * 60000;
+                sec = floor(tempTime / 1000);
+                tempTime -= sec * 1000;
+                dec = floor(tempTime / 10);
+                if (min < 1) {
+                    if (dec < 10) {
+                        timeString = `${sec}.0${dec}`;
+                    } else {
+                        timeString = `${sec}.${dec}`;
+                    }
+                } else {
+                    if (sec < 10) {
+                        if (dec < 10) {
+                            timeString = `${min}:0${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:0${sec}.${dec}`;
+                        }
+                    } else {
+                        if (dec < 10) {
+                            timeString = `${min}:${sec}.0${dec}`;
+                        } else {
+                            timeString = `${min}:${sec}.${dec}`;
+                        }
+                    }
+                }
+                text(timeString, width * 5 / 8, y);
             }
-            text(timeString, width * 5 / 8, y);
         }
         pop();
         drawingContext.fillStyle = topMaskingGradient;
