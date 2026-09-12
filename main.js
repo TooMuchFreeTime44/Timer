@@ -76,8 +76,8 @@ let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
 let lapDisplaySlideAnimTime = 1000;
-let lapDisplaySlideTotalTime = 200;
-let lapsDisplayTimeDiff = 30;
+let lapDisplaySlideTotalTime = 400;
+let lapsDisplayTimeDiff = 40;
 let topMaskingGradient;
 let bottomMaskingGradient;
 let buttonStroke = 12;
@@ -403,10 +403,11 @@ function drawLaps() {
                     (height * 2) / 75 +
                     (height * 4) / 375;
                 let lapDisplaySingleSlideTime = lapDisplaySlideTotalTime - lapsDisplayTimeDiff * 5;
-                let screenY = -(y - lapScrollOffset - (height * 7) / 15) / height;
+                let screenY = -(y + lapScrollOffset - (height * 7) / 15) / height;
                 let columnsFromBottom = (screenY * 75) / 4;
                 let totalOffsetTime = columnsFromBottom * lapsDisplayTimeDiff;
                 let localAnimTime = lapDisplaySlideAnimTime - totalOffsetTime;
+                if (localAnimTime < 0) localAnimTime = 0;
                 let slideAnimOffset = (width * localAnimTime) / lapDisplaySingleSlideTime;
                 translate(slideAnimOffset, 0);
                 let ii = laps.length - i;
