@@ -1,6 +1,19 @@
 /// <reference types="p5/global" />
 class Button {
-    constructor(x, y, w, h, rad, strokeAmt, bodyCol, lineCol, message, textHeight, blackText, boldText) {
+    constructor(
+        x,
+        y,
+        w,
+        h,
+        rad,
+        strokeAmt,
+        bodyCol,
+        lineCol,
+        message,
+        textHeight,
+        blackText,
+        boldText
+    ) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -15,7 +28,7 @@ class Button {
         this.boldText = boldText;
         this.activated = true;
     }
-    
+
     show() {
         push();
         translate(this.x, this.y);
@@ -40,7 +53,13 @@ class Button {
     }
 
     isPressed() {
-        return this.activated && mouseX > this.x - this.w / 2 && mouseX < this.x + this.w / 2 && mouseY > this.y - this.h / 2 && mouseY < this.y + this.h / 2;
+        return (
+            this.activated &&
+            mouseX > this.x - this.w / 2 &&
+            mouseX < this.x + this.w / 2 &&
+            mouseY > this.y - this.h / 2 &&
+            mouseY < this.y + this.h / 2
+        );
     }
 }
 
@@ -77,7 +96,12 @@ function setup() {
     topMaskingGradient = drawingContext.createLinearGradient(0, height / 6, 0, height / 5);
     topMaskingGradient.addColorStop(0, color(30, 50, 55, 255).toString());
     topMaskingGradient.addColorStop(1, color(30, 50, 55, 0).toString());
-    bottomMaskingGradient = drawingContext.createLinearGradient(0, height * 7 / 15, 0, height / 2);
+    bottomMaskingGradient = drawingContext.createLinearGradient(
+        0,
+        (height * 7) / 15,
+        0,
+        height / 2
+    );
     bottomMaskingGradient.addColorStop(0, color(30, 50, 55, 0).toString());
     bottomMaskingGradient.addColorStop(1, color(30, 50, 55, 255).toString());
 }
@@ -89,7 +113,8 @@ function draw() {
         lapScrollVel *= frictionThisFrame;
         lapScrollOffset += lapScrollVel;
         let extraScrollMargin = height / 60;
-        let maxScroll = height * 4 / 15 - ((laps.length - 1) * height * 4 / 75) + extraScrollMargin;
+        let maxScroll =
+            (height * 4) / 15 - ((laps.length - 1) * height * 4) / 75 + extraScrollMargin;
         if (lapScrollOffset < maxScroll) {
             lapScrollOffset = maxScroll;
             lapScrollVel = 0;
@@ -105,21 +130,27 @@ function draw() {
         lapSlideAnimTime += deltaTime;
         lapDisplaySlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < cornerAnimTotalTime) {
-            startButton.rad = buttonCornerAnimTime * 40 / cornerAnimTotalTime + 30;
+            startButton.rad = (buttonCornerAnimTime * 40) / cornerAnimTotalTime + 30;
         } else {
             startButton.rad = 70;
         }
-        if (resetSlideAnimTime < slideAnimTotalTime * 8 / 15) {
-            resetButton.y = height * 38 / 48 - (height / 6 / (slideAnimTotalTime * 8 / 15) * resetSlideAnimTime) - buttonStroke;
+        if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
+            resetButton.y =
+                (height * 38) / 48 -
+                (height / 6 / ((slideAnimTotalTime * 8) / 15)) * resetSlideAnimTime -
+                buttonStroke;
             resetButton.show();
         } else {
-            resetButton.y = height * 38 / 48 - buttonStroke;
+            resetButton.y = (height * 38) / 48 - buttonStroke;
         }
         if (lapSlideAnimTime < slideAnimTotalTime) {
-            lapButton.y = height * 45 / 48 - (height * 15 / 48 / slideAnimTotalTime * lapSlideAnimTime) - buttonStroke;
+            lapButton.y =
+                (height * 45) / 48 -
+                ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime -
+                buttonStroke;
             lapButton.show();
         } else {
-            lapButton.y = height * 30 / 48 - buttonStroke;
+            lapButton.y = (height * 30) / 48 - buttonStroke;
         }
         if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
             drawLaps(lapDisplaySlideAnimTime);
@@ -133,16 +164,19 @@ function draw() {
         buttonCornerAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < cornerAnimTotalTime) {
-            startButton.rad = buttonCornerAnimTime * 40 / cornerAnimTotalTime + 30;
+            startButton.rad = (buttonCornerAnimTime * 40) / cornerAnimTotalTime + 30;
         } else {
             startButton.rad = 70;
         }
         drawLaps(lapDisplaySlideAnimTime);
-        if (lapSlideAnimTime < slideAnimTotalTime * 7 / 15) {
-            lapButton.y = height * 45 / 48 - (height * 7 / 48 / (slideAnimTotalTime * 7 / 15) * lapSlideAnimTime) - buttonStroke;
+        if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
+            lapButton.y =
+                (height * 45) / 48 -
+                ((height * 7) / 48 / ((slideAnimTotalTime * 7) / 15)) * lapSlideAnimTime -
+                buttonStroke;
             lapButton.show();
         } else {
-            lapButton.y = height * 38 / 48 - buttonStroke;
+            lapButton.y = (height * 38) / 48 - buttonStroke;
         }
         drawTime(true);
         resetButton.show();
@@ -153,23 +187,30 @@ function draw() {
         resetSlideAnimTime += deltaTime;
         lapSlideAnimTime += deltaTime;
         if (buttonCornerAnimTime < cornerAnimTotalTime) {
-            pauseButton.rad = 70 - buttonCornerAnimTime * 40 / cornerAnimTotalTime;
+            pauseButton.rad = 70 - (buttonCornerAnimTime * 40) / cornerAnimTotalTime;
         } else {
             pauseButton.rad = 30;
         }
         if (resetSlideAnimTime < slideAnimTotalTime) {
-            if (resetSlideAnimTime > slideAnimTotalTime * 8 / 15) {
-                resetButton.y = height * 30 / 48 + (height / 6 / (slideAnimTotalTime * 7 / 15) * (resetSlideAnimTime - slideAnimTotalTime * 8 / 15)) - buttonStroke;
+            if (resetSlideAnimTime > (slideAnimTotalTime * 8) / 15) {
+                resetButton.y =
+                    (height * 30) / 48 +
+                    (height / 6 / ((slideAnimTotalTime * 7) / 15)) *
+                        (resetSlideAnimTime - (slideAnimTotalTime * 8) / 15) -
+                    buttonStroke;
             } else {
-                resetButton.y = height * 30 / 48 - buttonStroke;
+                resetButton.y = (height * 30) / 48 - buttonStroke;
             }
         } else {
-            resetButton.y = height * 38 / 48 - buttonStroke;
+            resetButton.y = (height * 38) / 48 - buttonStroke;
         }
         if (lapSlideAnimTime < slideAnimTotalTime) {
-            lapButton.y = height * 30 / 48 + (height * 15 / 48 / slideAnimTotalTime * lapSlideAnimTime) - buttonStroke;
+            lapButton.y =
+                (height * 30) / 48 +
+                ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime -
+                buttonStroke;
         } else {
-            lapButton.y = height * 45 / 48 - buttonStroke;
+            lapButton.y = (height * 45) / 48 - buttonStroke;
         }
         drawLaps(lapDisplaySlideAnimTime);
         drawTime(false);
@@ -185,7 +226,11 @@ function windowResized() {
 }
 
 function touchStarted() {
-    if ((state === "readyTimeNonzero" || state === "timing") && mouseY > height / 5 && mouseY < height * 7 / 15) {
+    if (
+        (state === "readyTimeNonzero" || state === "timing") &&
+        mouseY > height / 5 &&
+        mouseY < (height * 7) / 15
+    ) {
         isScrolling = true;
     }
     if (state === "readyTimeZero" && startButton.isPressed()) {
@@ -198,7 +243,7 @@ function touchStarted() {
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         buttonCornerAnimTime = 0;
-        lapSlideAnimTime = slideAnimTotalTime * 8 / 15;
+        lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         buttonCornerAnimTime = 0;
@@ -233,10 +278,62 @@ function touchEnded() {
 }
 
 function setButtons() {
-    startButton = new Button(width / 2, height * 30 / 48 - buttonStroke, width - buttonStroke, height / 6, 70, buttonStroke, color(0, 140, 200), color(0, 120, 170), "Start", height / 10, false, true);
-    pauseButton = new Button(width / 2, height * 30 / 48 - buttonStroke, width - buttonStroke, height / 6, 30, buttonStroke, color(255, 55, 90), color(200, 50, 88), "Stop", height / 10, false, true);
-    resetButton = new Button(width / 2, height * 38 / 48 - buttonStroke, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Reset", height / 12, false, true);
-    lapButton = new Button(width / 2, height * 45 / 48 - buttonStroke, width - buttonStroke, height / 8, height / 16, buttonStroke, color(45, 75, 83), color(45, 75, 83), "Lap", height / 12, false, true);
+    startButton = new Button(
+        width / 2,
+        (height * 30) / 48 - buttonStroke,
+        width - buttonStroke,
+        height / 6,
+        70,
+        buttonStroke,
+        color(0, 140, 200),
+        color(0, 120, 170),
+        "Start",
+        height / 10,
+        false,
+        true
+    );
+    pauseButton = new Button(
+        width / 2,
+        (height * 30) / 48 - buttonStroke,
+        width - buttonStroke,
+        height / 6,
+        30,
+        buttonStroke,
+        color(255, 55, 90),
+        color(200, 50, 88),
+        "Stop",
+        height / 10,
+        false,
+        true
+    );
+    resetButton = new Button(
+        width / 2,
+        (height * 38) / 48 - buttonStroke,
+        width - buttonStroke,
+        height / 8,
+        height / 16,
+        buttonStroke,
+        color(45, 75, 83),
+        color(45, 75, 83),
+        "Reset",
+        height / 12,
+        false,
+        true
+    );
+    lapButton = new Button(
+        width / 2,
+        (height * 45) / 48 - buttonStroke,
+        width - buttonStroke,
+        height / 8,
+        height / 16,
+        buttonStroke,
+        color(45, 75, 83),
+        color(45, 75, 83),
+        "Lap",
+        height / 12,
+        false,
+        true
+    );
 }
 
 function drawTime(isUsingMilli) {
@@ -290,7 +387,7 @@ function drawLaps(animTime) {
     if (laps.length > 1) {
         push();
         fill(255);
-        textSize(height * 4 / 125);
+        textSize((height * 4) / 125);
         textStyle(BOLD);
         textAlign(LEFT, CENTER);
         push();
@@ -299,8 +396,12 @@ function drawLaps(animTime) {
             for (let i = 1; i < laps.length; i++) {
                 push();
                 let ii = laps.length - i;
-                let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
-                text(ii, width * 3 / 32, y);
+                let y =
+                    height / 5 +
+                    ((i - 1) * height * 4) / 75 +
+                    (height * 2) / 75 +
+                    (height * 4) / 375;
+                text(ii, (width * 3) / 32, y);
                 let tempTime = laps[ii] - laps[ii - 1];
                 let min = floor(tempTime / 60000);
                 tempTime -= min * 60000;
@@ -357,14 +458,18 @@ function drawLaps(animTime) {
                         }
                     }
                 }
-                text(timeString, width * 5 / 8, y);
+                text(timeString, (width * 5) / 8, y);
                 pop();
             }
         } else {
             for (let i = 1; i < laps.length; i++) {
                 let ii = laps.length - i;
-                let y = height / 5 + (i - 1) * height * 4 / 75 + height * 2 / 75 + height * 4 / 375;
-                text(ii, width * 3 / 32, y);
+                let y =
+                    height / 5 +
+                    ((i - 1) * height * 4) / 75 +
+                    (height * 2) / 75 +
+                    (height * 4) / 375;
+                text(ii, (width * 3) / 32, y);
                 let tempTime = laps[ii] - laps[ii - 1];
                 let min = floor(tempTime / 60000);
                 tempTime -= min * 60000;
@@ -421,14 +526,14 @@ function drawLaps(animTime) {
                         }
                     }
                 }
-                text(timeString, width * 5 / 8, y);
+                text(timeString, (width * 5) / 8, y);
             }
         }
         pop();
         drawingContext.fillStyle = topMaskingGradient;
         rect(0, height / 6, width, height / 30);
         drawingContext.fillStyle = bottomMaskingGradient;
-        rect(0, height * 7 / 15, width, height / 30);
+        rect(0, (height * 7) / 15, width, height / 30);
         fill(30, 50, 55);
         rect(0, 0, width, height / 6);
         rect(0, height / 2, width, height / 2);
