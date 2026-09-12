@@ -76,8 +76,8 @@ let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
 let lapDisplaySlideAnimTime = 1000;
-let lapDisplaySlideTotalTime = 200;
-let singleSlideTime = 100;
+let lapDisplaySlideTotalTime = 400;
+let lapsDisplayTimeDiff = 40;
 let topMaskingGradient;
 let bottomMaskingGradient;
 let buttonStroke = 12;
@@ -153,7 +153,7 @@ function draw() {
             lapButton.y = (height * 30) / 48 - buttonStroke;
         }
         if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
-            drawLaps(lapDisplaySlideAnimTime);
+            drawLaps();
         } else {
             laps = [0];
             lapScrollOffset = 0;
@@ -168,7 +168,7 @@ function draw() {
         } else {
             startButton.rad = 70;
         }
-        drawLaps(lapDisplaySlideAnimTime);
+        drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
             lapButton.y =
                 (height * 45) / 48 -
@@ -212,7 +212,7 @@ function draw() {
         } else {
             lapButton.y = (height * 45) / 48 - buttonStroke;
         }
-        drawLaps(lapDisplaySlideAnimTime);
+        drawLaps();
         drawTime(false);
         lapButton.show();
         resetButton.show();
@@ -255,11 +255,13 @@ function touchStarted() {
         buttonCornerAnimTime = 0;
         resetSlideAnimTime = 0;
         lapSlideAnimTime = 0;
+        lapDisplaySlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         time = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
         resetSlideAnimTime = 0;
+        lapDisplaySlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
     }
@@ -383,7 +385,7 @@ function drawTime(isUsingMilli) {
     pop();
 }
 
-function drawLaps(animTime) {
+function drawLaps() {
     if (laps.length > 1) {
         push();
         fill(255);
@@ -395,12 +397,20 @@ function drawLaps(animTime) {
         if (state === "readyTimeZero") {
             for (let i = 1; i < laps.length; i++) {
                 push();
-                let ii = laps.length - i;
                 let y =
                     height / 5 +
                     ((i - 1) * height * 4) / 75 +
                     (height * 2) / 75 +
                     (height * 4) / 375;
+                let lapDisplaySingleSlideTime = lapDisplaySlideTotalTime - lapsDisplayTimeDiff * 5;
+                let screenY = -(y + lapScrollOffset - (height * 7) / 15) / height;
+                let columnsFromBottom = (screenY * 75) / 4;
+                let totalOffsetTime = columnsFromBottom * lapsDisplayTimeDiff;
+                let localAnimTime = lapDisplaySlideAnimTime - totalOffsetTime;
+                if (localAnimTime < 0) localAnimTime = 0;
+                let slideAnimOffset = (width * localAnimTime) / lapDisplaySingleSlideTime;
+                translate(slideAnimOffset, 0);
+                let ii = laps.length - i;
                 text(ii, (width * 3) / 32, y);
                 let tempTime = laps[ii] - laps[ii - 1];
                 let min = floor(tempTime / 60000);
