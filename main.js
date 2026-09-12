@@ -76,8 +76,8 @@ let buttonCornerAnimTime = 1000;
 let resetSlideAnimTime = 1000;
 let lapSlideAnimTime = 1000;
 let lapDisplaySlideAnimTime = 1000;
-let lapDisplaySlideTotalTime = 400;
-let lapsDisplayTimeDiff = 40;
+let lapDisplaySlideTotalTime = 450;
+let lapsDisplayTimeDiff = 50;
 let topMaskingGradient;
 let bottomMaskingGradient;
 let buttonStroke = 12;
@@ -355,15 +355,31 @@ function drawTime(isUsingMilli) {
     if (isUsingMilli) {
         if (sec < 10) {
             if (min < 10) {
-                timeString = `0${min}:0${sec}.${dec}${milli}`;
+                if (milli < 10) {
+                    timeString = `0${min}:0${sec}.${dec}0${milli}`;
+                } else {
+                    timeString = `0${min}:0${sec}.${dec}${milli}`;
+                }
             } else {
-                timeString = `${min}:0${sec}.${dec}${milli}`;
+                if (milli < 10) {
+                    timeString = `${min}:0${sec}.${dec}0${milli}`;
+                } else {
+                    timeString = `${min}:0${sec}.${dec}${milli}`;
+                }
             }
         } else {
             if (min < 10) {
-                timeString = `0${min}:${sec}.${dec}${milli}`;
+                if (milli < 10) {
+                    timeString = `0${min}:${sec}.${dec}0${milli}`;
+                } else {
+                    timeString = `0${min}:${sec}.${dec}${milli}`;
+                }
             } else {
-                timeString = `${min}:${sec}.${dec}${milli}`;
+                if (milli < 10) {
+                    timeString = `${min}:${sec}.${dec}0${milli}`;
+                } else {
+                    timeString = `${min}:${sec}.${dec}${milli}`;
+                }
             }
         }
     } else {
@@ -407,6 +423,9 @@ function drawLaps() {
                 let columnsFromBottom = (screenY * 75) / 4;
                 let totalOffsetTime = columnsFromBottom * lapsDisplayTimeDiff;
                 let localAnimTime = lapDisplaySlideAnimTime - totalOffsetTime;
+                if (laps.length < 7) {
+                    localAnimTime += (7 - laps.length) * lapsDisplayTimeDiff;
+                }
                 if (localAnimTime < 0) localAnimTime = 0;
                 let slideAnimOffset = (width * localAnimTime) / lapDisplaySingleSlideTime;
                 translate(slideAnimOffset, 0);
