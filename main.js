@@ -157,7 +157,7 @@ function draw() {
             laps = [0];
             lapScrollOffset = 0;
         }
-        drawTime(true);
+        drawTime();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
             startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
             pauseButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
@@ -207,7 +207,7 @@ function draw() {
         } else {
             lapButton.y = (height * 38) / 48 - buttonStroke;
         }
-        drawTime(true);
+        drawTime();
         resetButton.show();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
             startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
@@ -272,7 +272,7 @@ function draw() {
             lapButton.y = (height * 45) / 48 - buttonStroke;
         }
         drawLaps();
-        drawTime(false);
+        drawTime();
         lapButton.show();
         resetButton.show();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
@@ -442,11 +442,8 @@ function setButtons() {
     );
 }
 
-function drawTime(isUsingMilli) {
+function drawTime() {
     push();
-    fill(255);
-    textSize(height / 12);
-    textStyle(BOLD);
     let tempTime = time;
     let min = floor(tempTime / 60000);
     tempTime -= min * 60000;
@@ -456,35 +453,38 @@ function drawTime(isUsingMilli) {
     tempTime -= dec * 100;
     let milli = floor(tempTime);
     let timeString;
-    if (isUsingMilli) {
+    let milliString;
+    fill(255);
+    textSize(height / 12);
+    textStyle(BOLD);
+    if (state !== "timing") {
         if (sec < 10) {
             if (min < 10) {
-                if (milli < 10) {
-                    timeString = `0${min}:0${sec}.${dec}0${milli}`;
-                } else {
-                    timeString = `0${min}:0${sec}.${dec}${milli}`;
-                }
+                timeString = `0${min}:0${sec}.${dec}`;
             } else {
-                if (milli < 10) {
-                    timeString = `${min}:0${sec}.${dec}0${milli}`;
-                } else {
-                    timeString = `${min}:0${sec}.${dec}${milli}`;
-                }
+                timeString = `${min}:0${sec}.${dec}`;
             }
         } else {
             if (min < 10) {
-                if (milli < 10) {
-                    timeString = `0${min}:${sec}.${dec}0${milli}`;
-                } else {
-                    timeString = `0${min}:${sec}.${dec}${milli}`;
-                }
+                timeString = `0${min}:${sec}.${dec}`;
             } else {
-                if (milli < 10) {
-                    timeString = `${min}:${sec}.${dec}0${milli}`;
-                } else {
-                    timeString = `${min}:${sec}.${dec}${milli}`;
-                }
+                timeString = `${min}:${sec}.${dec}`;
             }
+        }
+        if (milli < 10) {
+            milliString = `0${milli}`;
+        } else {
+            milliString = `${milli}`;
+        }
+        if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
+            let xOffset = ((-height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            text(timeString, width / 2 + xOffset, height / 8);
+            let alphaVal = (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            fill(255, 255, 255, alphaVal);
+            text(milliString, width / 2 + height / 6.6, height / 8);
+        } else {
+            text(timeString, width / 2 - height / 19, height / 8);
+            text(milliString, width / 2 + height / 6.6, height / 8);
         }
     } else {
         if (sec < 10) {
@@ -500,8 +500,8 @@ function drawTime(isUsingMilli) {
                 timeString = `${min}:${sec}.${dec}`;
             }
         }
+        text(timeString, width / 2, height / 8);
     }
-    text(timeString, width / 2, height / 8);
     pop();
 }
 
