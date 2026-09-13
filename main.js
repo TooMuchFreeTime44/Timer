@@ -71,6 +71,7 @@ let isScrolling = false;
 let lapScrollOffset = 0;
 let lapScrollVel = 0;
 let lapScrollFrictionPerSec = 0.01;
+let timeOnStartForMilli = 0;
 let slideAnimTotalTime = 220;
 let majorSwitchTotalTime = 300;
 let majorSwitchAnimTime = 1000;
@@ -332,6 +333,7 @@ function touchStarted() {
         laps = [0];
         lapScrollOffset = 0;
         majorSwitchAnimTime = 0;
+        timeOnStartForMilli = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         resetSlideAnimTime = 0;
@@ -339,6 +341,7 @@ function touchStarted() {
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         majorSwitchAnimTime = 0;
+        timeOnStartForMilli = time;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
@@ -500,7 +503,21 @@ function drawTime() {
                 timeString = `${min}:${sec}.${dec}`;
             }
         }
-        text(timeString, width / 2, height / 8);
+        milli = floor(timeOnStartForMilli) % 100;
+        if (milli < 10) {
+            milliString = `0${milli}`;
+        } else {
+            milliString = `${milli}`;
+        }
+        if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
+            let xOffset = ((height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            text(timeString, width / 2 + xOffset - height / 19, height / 8);
+            let alphaVal = 255 - (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            fill(255, 255, 255, alphaVal);
+            text(milliString, width / 2 + height / 6.6, height / 8);
+        } else {
+            text(timeString, width / 2, height / 8);
+        }
     }
     pop();
 }
