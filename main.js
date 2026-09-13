@@ -64,6 +64,7 @@ class Button {
 }
 
 let state = "readyTimeZero";
+let overallTimeMultiplier = 1;
 let time = 0;
 let laps = [0];
 let isScrolling = false;
@@ -111,7 +112,8 @@ function setup() {
 function draw() {
     background(30, 50, 55);
     if (state === "timing" || state === "readyTimeNonzero") {
-        let frictionThisFrame = lapScrollFrictionPerSec ** (deltaTime / 1000);
+        let frictionThisFrame =
+            lapScrollFrictionPerSec ** (deltaTime / overallTimeMultiplier / 1000);
         lapScrollVel *= frictionThisFrame;
         lapScrollOffset += lapScrollVel;
         let extraScrollMargin = height / 60;
@@ -127,10 +129,10 @@ function draw() {
         }
     }
     if (state === "readyTimeZero") {
-        buttonSwitchAnimTime += deltaTime;
-        resetSlideAnimTime += deltaTime;
-        lapSlideAnimTime += deltaTime;
-        lapDisplaySlideAnimTime += deltaTime;
+        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        resetSlideAnimTime += deltaTime / overallTimeMultiplier;
+        lapSlideAnimTime += deltaTime / overallTimeMultiplier;
+        lapDisplaySlideAnimTime += deltaTime / overallTimeMultiplier;
         if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
             resetButton.y =
                 (height * 38) / 48 -
@@ -193,8 +195,8 @@ function draw() {
             startButton.show();
         }
     } else if (state === "readyTimeNonzero") {
-        buttonSwitchAnimTime += deltaTime;
-        lapSlideAnimTime += deltaTime;
+        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
             lapButton.y =
@@ -244,10 +246,10 @@ function draw() {
             startButton.show();
         }
     } else if (state === "timing") {
-        time += deltaTime;
-        buttonSwitchAnimTime += deltaTime;
-        resetSlideAnimTime += deltaTime;
-        lapSlideAnimTime += deltaTime;
+        time += deltaTime / overallTimeMultiplier;
+        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        resetSlideAnimTime += deltaTime / overallTimeMultiplier;
+        lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         if (resetSlideAnimTime < slideAnimTotalTime) {
             if (resetSlideAnimTime > (slideAnimTotalTime * 8) / 15) {
                 resetButton.y =
