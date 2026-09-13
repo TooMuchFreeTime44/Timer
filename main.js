@@ -71,7 +71,7 @@ let lapScrollOffset = 0;
 let lapScrollVel = 0;
 let lapScrollFrictionPerSec = 0.01;
 let slideAnimTotalTime = 220;
-let buttonSwitchTotalTime = 1500;
+let buttonSwitchTotalTime = 300;
 let buttonSwitchAnimTime = 1000;
 let buttonSwitchPressX;
 let buttonSwitchPressY;
