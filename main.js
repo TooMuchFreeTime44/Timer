@@ -170,8 +170,17 @@ function draw() {
                 startButton.rad + buttonStroke / 2
             );
             drawingContext.clip();
-            let maxCircleRad = (startButton.w ** 2 + startButton.h ** 2) ** 0.5;
-            let growthRate = maxCircleRad / buttonSwitchTotalTime;
+            let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
+            let localY = buttonSwitchPressY - startButton.y + startButton.h / 2;
+            let dist1 = dist(0, 0, localX, localY);
+            let dist2 = dist(startButton.w, 0, localX, localY);
+            let dist3 = dist(0, startButton.h, localX, localY);
+            let dist4 = dist(startButton.w, startButton.h, localX, localY);
+            let maxDist = dist1;
+            if (dist2 > maxDist) maxDist = dist2;
+            if (dist2 > maxDist) maxDist = dist3;
+            if (dist4 > maxDist) maxDist = dist4;
+            let growthRate = maxDist / buttonSwitchTotalTime;
             let growthAmt = growthRate * buttonSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
@@ -212,8 +221,17 @@ function draw() {
                 startButton.rad + buttonStroke / 2
             );
             drawingContext.clip();
-            let maxCircleRad = (startButton.w ** 2 + startButton.h ** 2) ** 0.5;
-            let growthRate = maxCircleRad / buttonSwitchTotalTime;
+            let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
+            let localY = buttonSwitchPressY - startButton.y + startButton.h / 2;
+            let dist1 = dist(0, 0, localX, localY);
+            let dist2 = dist(startButton.w, 0, localX, localY);
+            let dist3 = dist(0, startButton.h, localX, localY);
+            let dist4 = dist(startButton.w, startButton.h, localX, localY);
+            let maxDist = dist1;
+            if (dist2 > maxDist) maxDist = dist2;
+            if (dist2 > maxDist) maxDist = dist3;
+            if (dist4 > maxDist) maxDist = dist4;
+            let growthRate = maxDist / buttonSwitchTotalTime;
             let growthAmt = growthRate * buttonSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
@@ -269,8 +287,17 @@ function draw() {
                 startButton.rad + buttonStroke / 2
             );
             drawingContext.clip();
-            let maxCircleRad = (startButton.w ** 2 + startButton.h ** 2) ** 0.5;
-            let growthRate = maxCircleRad / buttonSwitchTotalTime;
+            let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
+            let localY = buttonSwitchPressY - startButton.y + startButton.h / 2;
+            let dist1 = dist(0, 0, localX, localY);
+            let dist2 = dist(startButton.w, 0, localX, localY);
+            let dist3 = dist(0, startButton.h, localX, localY);
+            let dist4 = dist(startButton.w, startButton.h, localX, localY);
+            let maxDist = dist1;
+            if (dist2 > maxDist) maxDist = dist2;
+            if (dist2 > maxDist) maxDist = dist3;
+            if (dist4 > maxDist) maxDist = dist4;
+            let growthRate = maxDist / buttonSwitchTotalTime;
             let growthAmt = growthRate * buttonSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
@@ -641,4 +668,8 @@ function drawLaps() {
         rect(0, height / 2, width, height / 2);
         pop();
     }
+}
+
+function dist(x1, y1, x2, y2) {
+    return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5;
 }
