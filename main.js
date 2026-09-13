@@ -72,8 +72,8 @@ let lapScrollOffset = 0;
 let lapScrollVel = 0;
 let lapScrollFrictionPerSec = 0.01;
 let slideAnimTotalTime = 220;
-let buttonSwitchTotalTime = 300;
-let buttonSwitchAnimTime = 1000;
+let majorSwitchTotalTime = 300;
+let majorSwitchAnimTime = 1000;
 let buttonSwitchPressX;
 let buttonSwitchPressY;
 let resetSlideAnimTime = 1000;
@@ -129,7 +129,7 @@ function draw() {
         }
     }
     if (state === "readyTimeZero") {
-        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         resetSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapDisplaySlideAnimTime += deltaTime / overallTimeMultiplier;
@@ -158,9 +158,9 @@ function draw() {
             lapScrollOffset = 0;
         }
         drawTime(true);
-        if (buttonSwitchAnimTime < buttonSwitchTotalTime) {
-            startButton.rad = (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime + 30;
-            pauseButton.rad = (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime + 30;
+        if (majorSwitchAnimTime < majorSwitchTotalTime) {
+            startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
+            pauseButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
             pauseButton.show();
             push();
             drawingContext.beginPath();
@@ -182,8 +182,8 @@ function draw() {
             if (dist2 > maxDist) maxDist = dist2;
             if (dist2 > maxDist) maxDist = dist3;
             if (dist4 > maxDist) maxDist = dist4;
-            let growthRate = maxDist / buttonSwitchTotalTime;
-            let growthAmt = growthRate * buttonSwitchAnimTime;
+            let growthRate = maxDist / majorSwitchTotalTime;
+            let growthAmt = growthRate * majorSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
             drawingContext.clip();
@@ -195,7 +195,7 @@ function draw() {
             startButton.show();
         }
     } else if (state === "readyTimeNonzero") {
-        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
@@ -209,9 +209,9 @@ function draw() {
         }
         drawTime(true);
         resetButton.show();
-        if (buttonSwitchAnimTime < buttonSwitchTotalTime) {
-            startButton.rad = (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime + 30;
-            pauseButton.rad = (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime + 30;
+        if (majorSwitchAnimTime < majorSwitchTotalTime) {
+            startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
+            pauseButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
             pauseButton.show();
             push();
             drawingContext.beginPath();
@@ -233,8 +233,8 @@ function draw() {
             if (dist2 > maxDist) maxDist = dist2;
             if (dist2 > maxDist) maxDist = dist3;
             if (dist4 > maxDist) maxDist = dist4;
-            let growthRate = maxDist / buttonSwitchTotalTime;
-            let growthAmt = growthRate * buttonSwitchAnimTime;
+            let growthRate = maxDist / majorSwitchTotalTime;
+            let growthAmt = growthRate * majorSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
             drawingContext.clip();
@@ -247,7 +247,7 @@ function draw() {
         }
     } else if (state === "timing") {
         time += deltaTime / overallTimeMultiplier;
-        buttonSwitchAnimTime += deltaTime / overallTimeMultiplier;
+        majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         resetSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         if (resetSlideAnimTime < slideAnimTotalTime) {
@@ -275,9 +275,9 @@ function draw() {
         drawTime(false);
         lapButton.show();
         resetButton.show();
-        if (buttonSwitchAnimTime < buttonSwitchTotalTime) {
-            startButton.rad = 70 - (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime;
-            pauseButton.rad = 70 - (buttonSwitchAnimTime * 40) / buttonSwitchTotalTime;
+        if (majorSwitchAnimTime < majorSwitchTotalTime) {
+            startButton.rad = 70 - (majorSwitchAnimTime * 40) / majorSwitchTotalTime;
+            pauseButton.rad = 70 - (majorSwitchAnimTime * 40) / majorSwitchTotalTime;
             startButton.show();
             push();
             drawingContext.beginPath();
@@ -299,8 +299,8 @@ function draw() {
             if (dist2 > maxDist) maxDist = dist2;
             if (dist2 > maxDist) maxDist = dist3;
             if (dist4 > maxDist) maxDist = dist4;
-            let growthRate = maxDist / buttonSwitchTotalTime;
-            let growthAmt = growthRate * buttonSwitchAnimTime;
+            let growthRate = maxDist / majorSwitchTotalTime;
+            let growthAmt = growthRate * majorSwitchAnimTime;
             drawingContext.beginPath();
             drawingContext.arc(buttonSwitchPressX, buttonSwitchPressY, growthAmt, 0, PI * 2);
             drawingContext.clip();
@@ -331,14 +331,14 @@ function touchStarted() {
         state = "timing";
         laps = [0];
         lapScrollOffset = 0;
-        buttonSwitchAnimTime = 0;
+        majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         resetSlideAnimTime = 0;
         lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
-        buttonSwitchAnimTime = 0;
+        majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
@@ -346,7 +346,7 @@ function touchStarted() {
         state = "readyTimeNonzero";
         resetButton.y = (height * 38) / 48 - buttonStroke;
         resetSlideAnimTime = slideAnimTotalTime;
-        buttonSwitchAnimTime = 0;
+        majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = 0;
@@ -354,7 +354,7 @@ function touchStarted() {
         time = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
-        buttonSwitchAnimTime = 0;
+        majorSwitchAnimTime = 0;
         buttonSwitchPressX = pauseButton.x;
         buttonSwitchPressY = pauseButton.y;
         resetSlideAnimTime = 0;
