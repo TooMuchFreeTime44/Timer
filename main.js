@@ -344,6 +344,8 @@ function touchStarted() {
         lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
+        resetButton.y = (height * 38) / 48 - buttonStroke;
+        resetSlideAnimTime = slideAnimTotalTime;
         buttonSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
