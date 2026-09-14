@@ -67,6 +67,8 @@ let state = "readyTimeZero";
 let overallTimeMultiplier = 1;
 let time = 0;
 let laps = [0];
+let defaultBackground;
+let timingBackground;
 let isScrolling = false;
 let lapScrollOffset = 0;
 let lapScrollVel = 0;
@@ -97,6 +99,8 @@ function setup() {
     textAlign(CENTER, CENTER);
     noStroke();
     setButtons();
+    defaultBackground = color(30, 50, 55);
+    timingBackground = color(15, 65, 80);
     topMaskingGradient = drawingContext.createLinearGradient(0, height / 6, 0, height / 5);
     topMaskingGradient.addColorStop(0, color(30, 50, 55, 255).toString());
     topMaskingGradient.addColorStop(1, color(30, 50, 55, 0).toString());
@@ -111,7 +115,6 @@ function setup() {
 }
 
 function draw() {
-    background(30, 50, 55);
     if (state === "timing" || state === "readyTimeNonzero") {
         let frictionThisFrame =
             lapScrollFrictionPerSec ** (deltaTime / overallTimeMultiplier / 1000);
@@ -134,6 +137,13 @@ function draw() {
         resetSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapDisplaySlideAnimTime += deltaTime / overallTimeMultiplier;
+        background(
+            lerpColor(
+                timingBackground,
+                defaultBackground,
+                majorSwitchAnimTime / majorSwitchTotalTime
+            )
+        );
         if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
             resetButton.y =
                 (height * 38) / 48 -
@@ -198,6 +208,13 @@ function draw() {
     } else if (state === "readyTimeNonzero") {
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
+        background(
+            lerpColor(
+                timingBackground,
+                defaultBackground,
+                majorSwitchAnimTime / majorSwitchTotalTime
+            )
+        );
         drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
             lapButton.y =
@@ -251,6 +268,13 @@ function draw() {
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         resetSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
+        background(
+            lerpColor(
+                defaultBackground,
+                timingBackground,
+                majorSwitchAnimTime / majorSwitchTotalTime
+            )
+        );
         if (resetSlideAnimTime < slideAnimTotalTime) {
             if (resetSlideAnimTime > (slideAnimTotalTime * 8) / 15) {
                 resetButton.y =
