@@ -32,10 +32,16 @@ class Button {
     show() {
         push();
         translate(this.x, this.y);
-        fill(this.bodyCol);
-        strokeWeight(this.strokeAmt);
-        stroke(this.lineCol);
+        fill(this.lineCol);
         rect(-this.w / 2, -this.h / 2, this.w, this.h, this.rad);
+        fill(this.bodyCol);
+        rect(
+            -this.w / 2 + this.strokeAmt,
+            -this.h / 2 + this.strokeAmt,
+            this.w - 2 * this.strokeAmt,
+            this.h - 2 * this.strokeAmt,
+            this.rad - this.strokeAmt
+        );
         if (this.blackText) {
             fill(0);
         } else {
@@ -67,8 +73,9 @@ let state = "readyTimeZero";
 let overallTimeMultiplier = 1;
 let time = 0;
 let laps = [0];
-let defaultBackground;
-let timingBackground;
+let defaultBgColor;
+let timingBgColor;
+let buttonColor;
 let isScrolling = false;
 let lapScrollOffset = 0;
 let lapScrollVel = 0;
@@ -98,20 +105,10 @@ function setup() {
     textFont("Varela Round");
     textAlign(CENTER, CENTER);
     noStroke();
+    defaultBgColor = color(30, 50, 55);
+    timingBgColor = color(15, 65, 80);
+    buttonColor = color(47, 75, 83);
     setButtons();
-    defaultBackground = color(30, 50, 55);
-    timingBackground = color(15, 65, 80);
-    topMaskingGradient = drawingContext.createLinearGradient(0, height / 6, 0, height / 5);
-    topMaskingGradient.addColorStop(0, color(30, 50, 55, 255).toString());
-    topMaskingGradient.addColorStop(1, color(30, 50, 55, 0).toString());
-    bottomMaskingGradient = drawingContext.createLinearGradient(
-        0,
-        (height * 7) / 15,
-        0,
-        height / 2
-    );
-    bottomMaskingGradient.addColorStop(0, color(30, 50, 55, 0).toString());
-    bottomMaskingGradient.addColorStop(1, color(30, 50, 55, 255).toString());
 }
 
 function draw() {
@@ -139,28 +136,25 @@ function draw() {
         lapDisplaySlideAnimTime += deltaTime / overallTimeMultiplier;
         background(
             lerpColor(
-                timingBackground,
-                defaultBackground,
-                majorSwitchAnimTime / majorSwitchTotalTime
+                timingBgColor,
+                defaultBgColor,
+                majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
         if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
             resetButton.y =
-                (height * 38) / 48 -
-                (height / 6 / ((slideAnimTotalTime * 8) / 15)) * resetSlideAnimTime -
-                buttonStroke;
+                (height * 37) / 48 -
+                (height / 6 / ((slideAnimTotalTime * 8) / 15)) * resetSlideAnimTime;
             resetButton.show();
         } else {
-            resetButton.y = (height * 38) / 48 - buttonStroke;
+            resetButton.y = (height * 37) / 48;
         }
         if (lapSlideAnimTime < slideAnimTotalTime) {
             lapButton.y =
-                (height * 45) / 48 -
-                ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime -
-                buttonStroke;
+                (height * 44) / 48 - ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime;
             lapButton.show();
         } else {
-            lapButton.y = (height * 30) / 48 - buttonStroke;
+            lapButton.y = (height * 29) / 48;
         }
         if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
             drawLaps();
@@ -176,11 +170,11 @@ function draw() {
             push();
             drawingContext.beginPath();
             drawingContext.roundRect(
-                startButton.x - startButton.w / 2 - buttonStroke / 2,
-                startButton.y - startButton.h / 2 - buttonStroke / 2,
-                startButton.w + buttonStroke,
-                startButton.h + buttonStroke,
-                startButton.rad + buttonStroke / 2
+                startButton.x - startButton.w / 2,
+                startButton.y - startButton.h / 2,
+                startButton.w,
+                startButton.h,
+                startButton.rad
             );
             drawingContext.clip();
             let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
@@ -210,20 +204,19 @@ function draw() {
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         background(
             lerpColor(
-                timingBackground,
-                defaultBackground,
-                majorSwitchAnimTime / majorSwitchTotalTime
+                timingBgColor,
+                defaultBgColor,
+                majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
         drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
             lapButton.y =
-                (height * 45) / 48 -
-                ((height * 7) / 48 / ((slideAnimTotalTime * 7) / 15)) * lapSlideAnimTime -
-                buttonStroke;
+                (height * 44) / 48 -
+                ((height * 7) / 48 / ((slideAnimTotalTime * 7) / 15)) * lapSlideAnimTime;
             lapButton.show();
         } else {
-            lapButton.y = (height * 38) / 48 - buttonStroke;
+            lapButton.y = (height * 37) / 48;
         }
         drawTime();
         resetButton.show();
@@ -234,11 +227,11 @@ function draw() {
             push();
             drawingContext.beginPath();
             drawingContext.roundRect(
-                startButton.x - startButton.w / 2 - buttonStroke / 2,
-                startButton.y - startButton.h / 2 - buttonStroke / 2,
-                startButton.w + buttonStroke,
-                startButton.h + buttonStroke,
-                startButton.rad + buttonStroke / 2
+                startButton.x - startButton.w / 2,
+                startButton.y - startButton.h / 2,
+                startButton.w,
+                startButton.h,
+                startButton.rad
             );
             drawingContext.clip();
             let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
@@ -270,31 +263,28 @@ function draw() {
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         background(
             lerpColor(
-                defaultBackground,
-                timingBackground,
-                majorSwitchAnimTime / majorSwitchTotalTime
+                defaultBgColor,
+                timingBgColor,
+                majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
         if (resetSlideAnimTime < slideAnimTotalTime) {
             if (resetSlideAnimTime > (slideAnimTotalTime * 8) / 15) {
                 resetButton.y =
-                    (height * 30) / 48 +
+                    (height * 29) / 48 +
                     (height / 6 / ((slideAnimTotalTime * 7) / 15)) *
-                        (resetSlideAnimTime - (slideAnimTotalTime * 8) / 15) -
-                    buttonStroke;
+                        (resetSlideAnimTime - (slideAnimTotalTime * 8) / 15);
             } else {
-                resetButton.y = (height * 30) / 48 - buttonStroke;
+                resetButton.y = (height * 29) / 48;
             }
         } else {
-            resetButton.y = (height * 38) / 48 - buttonStroke;
+            resetButton.y = (height * 37) / 48;
         }
         if (lapSlideAnimTime < slideAnimTotalTime) {
             lapButton.y =
-                (height * 30) / 48 +
-                ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime -
-                buttonStroke;
+                (height * 29) / 48 + ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime;
         } else {
-            lapButton.y = (height * 45) / 48 - buttonStroke;
+            lapButton.y = (height * 44) / 48;
         }
         drawLaps();
         drawTime();
@@ -307,11 +297,11 @@ function draw() {
             push();
             drawingContext.beginPath();
             drawingContext.roundRect(
-                startButton.x - startButton.w / 2 - buttonStroke / 2,
-                startButton.y - startButton.h / 2 - buttonStroke / 2,
-                startButton.w + buttonStroke,
-                startButton.h + buttonStroke,
-                startButton.rad + buttonStroke / 2
+                startButton.x - startButton.w / 2,
+                startButton.y - startButton.h / 2,
+                startButton.w,
+                startButton.h,
+                startButton.rad
             );
             drawingContext.clip();
             let localX = buttonSwitchPressX - startButton.x + startButton.w / 2;
@@ -371,7 +361,7 @@ function touchStarted() {
         lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
-        resetButton.y = (height * 38) / 48 - buttonStroke;
+        resetButton.y = (height * 37) / 48;
         resetSlideAnimTime = slideAnimTotalTime;
         majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
@@ -413,8 +403,8 @@ function touchEnded() {
 function setButtons() {
     startButton = new Button(
         width / 2,
-        (height * 30) / 48 - buttonStroke,
-        width - buttonStroke,
+        (height * 29) / 48,
+        width,
         height / 6,
         70,
         buttonStroke,
@@ -427,8 +417,8 @@ function setButtons() {
     );
     pauseButton = new Button(
         width / 2,
-        (height * 30) / 48 - buttonStroke,
-        width - buttonStroke,
+        (height * 29) / 48,
+        width,
         height / 6,
         30,
         buttonStroke,
@@ -441,13 +431,13 @@ function setButtons() {
     );
     resetButton = new Button(
         width / 2,
-        (height * 38) / 48 - buttonStroke,
-        width - buttonStroke,
+        (height * 37) / 48,
+        width,
         height / 8,
         height / 16,
-        buttonStroke,
-        color(45, 75, 83),
-        color(45, 75, 83),
+        0,
+        buttonColor,
+        buttonColor,
         "Reset",
         height / 12,
         false,
@@ -455,13 +445,13 @@ function setButtons() {
     );
     lapButton = new Button(
         width / 2,
-        (height * 45) / 48 - buttonStroke,
-        width - buttonStroke,
+        (height * 44) / 48,
+        width,
         height / 8,
         height / 16,
-        buttonStroke,
-        color(45, 75, 83),
-        color(45, 75, 83),
+        0,
+        buttonColor,
+        buttonColor,
         "Lap",
         height / 12,
         false,
@@ -548,6 +538,37 @@ function drawTime() {
 
 function drawLaps() {
     if (laps.length > 1) {
+        let currBgColor;
+        if (state === "timing") {
+            currBgColor = lerpColor(
+                defaultBgColor,
+                timingBgColor,
+                majorSwitchAnimTime / (majorSwitchTotalTime * 2)
+            );
+        } else {
+            currBgColor = lerpColor(
+                timingBgColor,
+                defaultBgColor,
+                majorSwitchAnimTime / (majorSwitchTotalTime * 2)
+            );
+        }
+        topMaskingGradient = drawingContext.createLinearGradient(0, height / 6, 0, height / 5);
+        topMaskingGradient.addColorStop(0, color(currBgColor).toString());
+        topMaskingGradient.addColorStop(
+            1,
+            color(red(currBgColor), green(currBgColor), blue(currBgColor), 0).toString()
+        );
+        bottomMaskingGradient = drawingContext.createLinearGradient(
+            0,
+            (height * 7) / 15,
+            0,
+            height / 2
+        );
+        bottomMaskingGradient.addColorStop(
+            0,
+            color(red(currBgColor), green(currBgColor), blue(currBgColor), 0).toString()
+        );
+        bottomMaskingGradient.addColorStop(1, color(currBgColor).toString());
         push();
         fill(255);
         textSize((height * 4) / 125);
@@ -708,7 +729,7 @@ function drawLaps() {
         rect(0, height / 6, width, height / 30);
         drawingContext.fillStyle = bottomMaskingGradient;
         rect(0, (height * 7) / 15, width, height / 30);
-        fill(30, 50, 55);
+        fill(currBgColor);
         rect(0, 0, width, height / 6);
         rect(0, height / 2, width, height / 2);
         pop();
