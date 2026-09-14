@@ -141,6 +141,12 @@ function draw() {
                 majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
+        if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
+            drawLaps();
+        } else {
+            laps = [0];
+            lapScrollOffset = 0;
+        }
         if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
             resetButton.y =
                 (height * 37) / 48 -
@@ -155,12 +161,6 @@ function draw() {
             lapButton.show();
         } else {
             lapButton.y = (height * 29) / 48;
-        }
-        if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
-            drawLaps();
-        } else {
-            laps = [0];
-            lapScrollOffset = 0;
         }
         drawTime();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
