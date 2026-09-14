@@ -70,7 +70,7 @@ class Button {
 }
 
 let state = "readyTimeZero";
-let overallTimeMultiplier = 10;
+let overallTimeMultiplier = 1;
 let time = 0;
 let laps = [0];
 let defaultBgColor;
@@ -112,7 +112,7 @@ function setup() {
     textAlign(CENTER, CENTER);
     noStroke();
     defaultBgColor = color(30, 50, 55);
-    timingBgColor = color(15, 65, 80);
+    timingBgColor = color(35, 60, 73);
     buttonColor = color(47, 75, 83);
     setButtons();
     buttonStop1 = (height * 29) / 48;
