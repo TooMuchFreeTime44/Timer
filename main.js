@@ -70,7 +70,7 @@ class Button {
 }
 
 let state = "readyTimeZero";
-let overallTimeMultiplier = 1;
+let overallTimeMultiplier = 10;
 let time = 0;
 let laps = [0];
 let defaultBgColor;
@@ -98,6 +98,12 @@ let startButton;
 let pauseButton;
 let resetButton;
 let lapButton;
+let buttonStop1;
+let buttonStop2;
+let buttonStop3;
+let buttonTravel1;
+let buttonTravel2;
+let buttonTravel3;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -109,6 +115,12 @@ function setup() {
     timingBgColor = color(15, 65, 80);
     buttonColor = color(47, 75, 83);
     setButtons();
+    buttonStop1 = (height * 29) / 48;
+    buttonStop2 = (height * 37) / 48;
+    buttonStop3 = (height * 44) / 48;
+    buttonTravel1 = buttonStop2 - buttonStop1;
+    buttonTravel2 = buttonStop3 - buttonStop2;
+    buttonTravel3 = buttonStop3 - buttonStop1;
 }
 
 function draw() {
@@ -147,20 +159,20 @@ function draw() {
             laps = [0];
             lapScrollOffset = 0;
         }
-        if (resetSlideAnimTime < (slideAnimTotalTime * 8) / 15) {
-            resetButton.y =
-                (height * 37) / 48 -
-                (height / 6 / ((slideAnimTotalTime * 8) / 15)) * resetSlideAnimTime;
-            resetButton.show();
-        } else {
-            resetButton.y = (height * 37) / 48;
-        }
         if (lapSlideAnimTime < slideAnimTotalTime) {
-            lapButton.y =
-                (height * 44) / 48 - ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime;
+            lapButton.y = buttonStop3 - (buttonTravel3 / slideAnimTotalTime) * lapSlideAnimTime;
             lapButton.show();
         } else {
-            lapButton.y = (height * 29) / 48;
+            lapButton.y = buttonStop1;
+        }
+        if (resetSlideAnimTime < (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
+            resetButton.y =
+                buttonStop2 -
+                (((buttonStop1 / slideAnimTotalTime) * buttonTravel1) / buttonTravel3) *
+                    resetSlideAnimTime;
+            resetButton.show();
+        } else {
+            resetButton.y = buttonStop2;
         }
         drawTime();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
@@ -210,13 +222,14 @@ function draw() {
             )
         );
         drawLaps();
-        if (lapSlideAnimTime < (slideAnimTotalTime * 7) / 15) {
+        if (lapSlideAnimTime < (slideAnimTotalTime * buttonTravel2) / buttonTravel3) {
             lapButton.y =
-                (height * 44) / 48 -
-                ((height * 7) / 48 / ((slideAnimTotalTime * 7) / 15)) * lapSlideAnimTime;
+                buttonStop3 -
+                (buttonTravel2 / ((slideAnimTotalTime * buttonTravel2) / buttonTravel3)) *
+                    lapSlideAnimTime;
             lapButton.show();
         } else {
-            lapButton.y = (height * 37) / 48;
+            lapButton.y = buttonStop1;
         }
         drawTime();
         resetButton.show();
@@ -269,22 +282,21 @@ function draw() {
             )
         );
         if (resetSlideAnimTime < slideAnimTotalTime) {
-            if (resetSlideAnimTime > (slideAnimTotalTime * 8) / 15) {
+            if (resetSlideAnimTime > (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
                 resetButton.y =
-                    (height * 29) / 48 +
-                    (height / 6 / ((slideAnimTotalTime * 7) / 15)) *
-                        (resetSlideAnimTime - (slideAnimTotalTime * 8) / 15);
+                    buttonStop1 +
+                    (buttonTravel1 / ((slideAnimTotalTime * buttonTravel1) / buttonTravel3)) *
+                        (resetSlideAnimTime - (slideAnimTotalTime * buttonTravel2) / buttonTravel3);
             } else {
-                resetButton.y = (height * 29) / 48;
+                resetButton.y = buttonStop1;
             }
         } else {
-            resetButton.y = (height * 37) / 48;
+            resetButton.y = buttonStop2;
         }
         if (lapSlideAnimTime < slideAnimTotalTime) {
-            lapButton.y =
-                (height * 29) / 48 + ((height * 15) / 48 / slideAnimTotalTime) * lapSlideAnimTime;
+            lapButton.y = buttonStop1 + (buttonTravel3 / slideAnimTotalTime) * lapSlideAnimTime;
         } else {
-            lapButton.y = (height * 44) / 48;
+            lapButton.y = buttonStop3;
         }
         drawLaps();
         drawTime();
@@ -332,6 +344,12 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     setButtons();
+    buttonStop1 = (height * 29) / 48;
+    buttonStop2 = (height * 37) / 48;
+    buttonStop3 = (height * 44) / 48;
+    buttonTravel1 = buttonStop2 - buttonStop1;
+    buttonTravel2 = buttonStop3 - buttonStop2;
+    buttonTravel3 = buttonStop3 - buttonStop1;
 }
 
 function touchStarted() {
@@ -358,10 +376,10 @@ function touchStarted() {
         timeOnStartForMilli = time;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
-        lapSlideAnimTime = (slideAnimTotalTime * 8) / 15;
+        lapSlideAnimTime = (slideAnimTotalTime * buttonTravel1) / buttonTravel3;
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
-        resetButton.y = (height * 37) / 48;
+        resetButton.y = buttonStop2;
         resetSlideAnimTime = slideAnimTotalTime;
         majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
@@ -382,6 +400,7 @@ function touchStarted() {
         lapScrollVel = 0;
         state = "readyTimeZero";
         resetSlideAnimTime = 0;
+        lapSlideAnimTime = slideAnimTotalTime;
         lapDisplaySlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
@@ -431,7 +450,7 @@ function setButtons() {
     );
     resetButton = new Button(
         width / 2,
-        (height * 37) / 48,
+        buttonStop2,
         width,
         height / 8,
         height / 16,
@@ -445,7 +464,7 @@ function setButtons() {
     );
     lapButton = new Button(
         width / 2,
-        (height * 44) / 48,
+        buttonStop3,
         width,
         height / 8,
         height / 16,
