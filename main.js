@@ -106,6 +106,7 @@ let buttonTravel2;
 let buttonTravel3;
 let mainButtonBlueCorners;
 let mainButtonRedCorners;
+let mainTimerOpacity = 1;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -136,6 +137,9 @@ function draw() {
             lapScrollOffset = -extraScrollMargin * 1.5;
             lapScrollVel = 0;
         }
+    }
+    if (state === "timing" || state === "readyTimeZero") {
+        mainTimerOpacity += (1 - mainTimerOpacity) * 0.05;
     }
     if (state === "readyTimeZero") {
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
@@ -216,6 +220,7 @@ function draw() {
     } else if (state === "readyTimeNonzero") {
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
+        mainTimerOpacity = cos(majorSwitchAnimTime / 1000) / 4 + 3 / 4;
         background(
             lerpColor(
                 timingBgColor,
@@ -506,7 +511,7 @@ function drawTime() {
     let milli = floor(tempTime);
     let timeString;
     let milliString;
-    fill(255);
+    fill(255, 255, 255, 255 * mainTimerOpacity);
     textSize(height / 12);
     textStyle(BOLD);
     if (state !== "timing") {
@@ -530,11 +535,20 @@ function drawTime() {
         }
         if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
             let xOffset = ((-height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            fill(0, 0, 255);
+            text(timeString, width / 2 + xOffset, height / 8);
+            fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset, height / 8);
             let alphaVal = (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
-            fill(255, 255, 255, alphaVal);
+            fill(0, 0, 255, alphaVal);
+            text(milliString, width / 2 + height / 6.6, height / 8);
+            fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
+            fill(0, 0, 255);
+            text(timeString, width / 2 - height / 19, height / 8);
+            text(milliString, width / 2 + height / 6.6, height / 8);
+            fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 - height / 19, height / 8);
             text(milliString, width / 2 + height / 6.6, height / 8);
         }
@@ -560,11 +574,19 @@ function drawTime() {
         }
         if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
             let xOffset = ((height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
+            fill(0, 0, 255);
+            text(timeString, width / 2 + xOffset - height / 19, height / 8);
+            fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
             let alphaVal = 255 - (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
-            fill(255, 255, 255, alphaVal);
+            fill(0, 0, 255, alphaVal);
+            text(milliString, width / 2 + height / 6.6, height / 8);
+            fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
+            fill(0, 0, 255);
+            text(timeString, width / 2, height / 8);
+            fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2, height / 8);
         }
     }
