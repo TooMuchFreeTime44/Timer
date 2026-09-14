@@ -104,6 +104,8 @@ let buttonStop3;
 let buttonTravel1;
 let buttonTravel2;
 let buttonTravel3;
+let mainButtonBlueCorners;
+let mainButtonRedCorners;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -115,12 +117,6 @@ function setup() {
     timingBgColor = color(35, 60, 73);
     buttonColor = color(47, 75, 83);
     setButtons();
-    buttonStop1 = (height * 29) / 48;
-    buttonStop2 = (height * 37) / 48;
-    buttonStop3 = (height * 44) / 48;
-    buttonTravel1 = buttonStop2 - buttonStop1;
-    buttonTravel2 = buttonStop3 - buttonStop2;
-    buttonTravel3 = buttonStop3 - buttonStop1;
 }
 
 function draw() {
@@ -176,8 +172,14 @@ function draw() {
         }
         drawTime();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
-            startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
-            pauseButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
+            startButton.rad =
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime +
+                mainButtonRedCorners;
+            pauseButton.rad =
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime +
+                mainButtonRedCorners;
             pauseButton.show();
             push();
             drawingContext.beginPath();
@@ -207,8 +209,8 @@ function draw() {
             startButton.show();
             pop();
         } else {
-            startButton.rad = 70;
-            pauseButton.rad = 70;
+            startButton.rad = mainButtonBlueCorners;
+            pauseButton.rad = mainButtonBlueCorners;
             startButton.show();
         }
     } else if (state === "readyTimeNonzero") {
@@ -234,8 +236,14 @@ function draw() {
         drawTime();
         resetButton.show();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
-            startButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
-            pauseButton.rad = (majorSwitchAnimTime * 40) / majorSwitchTotalTime + 30;
+            startButton.rad =
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime +
+                mainButtonRedCorners;
+            pauseButton.rad =
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime +
+                mainButtonRedCorners;
             pauseButton.show();
             push();
             drawingContext.beginPath();
@@ -265,8 +273,8 @@ function draw() {
             startButton.show();
             pop();
         } else {
-            startButton.rad = 70;
-            pauseButton.rad = 70;
+            startButton.rad = mainButtonBlueCorners;
+            pauseButton.rad = mainButtonBlueCorners;
             startButton.show();
         }
     } else if (state === "timing") {
@@ -303,8 +311,14 @@ function draw() {
         lapButton.show();
         resetButton.show();
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
-            startButton.rad = 70 - (majorSwitchAnimTime * 40) / majorSwitchTotalTime;
-            pauseButton.rad = 70 - (majorSwitchAnimTime * 40) / majorSwitchTotalTime;
+            startButton.rad =
+                mainButtonBlueCorners -
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime;
+            pauseButton.rad =
+                mainButtonBlueCorners -
+                (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
+                    majorSwitchTotalTime;
             startButton.show();
             push();
             drawingContext.beginPath();
@@ -334,8 +348,8 @@ function draw() {
             pauseButton.show();
             pop();
         } else {
-            startButton.rad = 30;
-            pauseButton.rad = 30;
+            startButton.rad = mainButtonRedCorners;
+            pauseButton.rad = mainButtonRedCorners;
             pauseButton.show();
         }
     }
@@ -344,12 +358,6 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     setButtons();
-    buttonStop1 = (height * 29) / 48;
-    buttonStop2 = (height * 37) / 48;
-    buttonStop3 = (height * 44) / 48;
-    buttonTravel1 = buttonStop2 - buttonStop1;
-    buttonTravel2 = buttonStop3 - buttonStop2;
-    buttonTravel3 = buttonStop3 - buttonStop1;
 }
 
 function touchStarted() {
@@ -420,38 +428,46 @@ function touchEnded() {
 }
 
 function setButtons() {
+    buttonStop1 = (height * 63) / 96;
+    buttonStop2 = (height * 76) / 96;
+    buttonStop3 = (height * 89) / 96;
+    buttonTravel1 = buttonStop2 - buttonStop1;
+    buttonTravel2 = buttonStop3 - buttonStop2;
+    buttonTravel3 = buttonStop3 - buttonStop1;
+    mainButtonBlueCorners = (height * 19) / 192;
+    mainButtonRedCorners = height / 20;
     startButton = new Button(
         width / 2,
-        (height * 29) / 48,
+        (height * 119) / 192,
         width,
-        height / 6,
-        70,
+        (height * 19) / 96,
+        mainButtonBlueCorners,
         buttonStroke,
         color(0, 140, 200),
         color(0, 120, 170),
         "Start",
-        height / 10,
+        height / 8,
         false,
         true
     );
     pauseButton = new Button(
         width / 2,
-        (height * 29) / 48,
+        (height * 119) / 192,
         width,
-        height / 6,
-        30,
+        (height * 19) / 96,
+        mainButtonRedCorners,
         buttonStroke,
         color(255, 55, 90),
         color(200, 50, 88),
         "Stop",
-        height / 10,
+        height / 8,
         false,
         true
     );
     resetButton = new Button(
         width / 2,
         buttonStop2,
-        width,
+        width - height / 48,
         height / 8,
         height / 16,
         0,
@@ -465,7 +481,7 @@ function setButtons() {
     lapButton = new Button(
         width / 2,
         buttonStop3,
-        width,
+        width - height / 48,
         height / 8,
         height / 16,
         0,
