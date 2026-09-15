@@ -584,7 +584,7 @@ function drawTime() {
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
-            textSize(height / 11);
+            textSize(height / 12);
             fill(0, 0, 0, 128);
             if (min < 1) {
                 text("00:", width / 2 - height / 7.05 + xOffset, height / 8);
@@ -600,7 +600,7 @@ function drawTime() {
             text(timeString, width / 2, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2, height / 8);
-            textSize(height / 11);
+            textSize(height / 12);
             fill(0, 0, 0, 128);
             if (min < 1) {
                 text("00:", width / 2 - height / 11.22, height / 8);
