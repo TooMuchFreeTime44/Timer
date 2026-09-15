@@ -584,10 +584,12 @@ function drawTime() {
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
-            fill(0, 0, 0, 100);
+            textSize(height / 11);
+            fill(0, 0, 0, 128);
             if (min < 1) {
                 text("00:", width / 2 - height / 7.05 + xOffset, height / 8);
             }
+            textSize(height / 12);
             let alphaVal = 255 - (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
             fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), alphaVal);
             text(milliString, width / 2 + height / 6.6, height / 8);
@@ -598,7 +600,8 @@ function drawTime() {
             text(timeString, width / 2, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2, height / 8);
-            fill(0, 0, 0, 100);
+            textSize(height / 11);
+            fill(0, 0, 0, 128);
             if (min < 1) {
                 text("00:", width / 2 - height / 11.22, height / 8);
             }
