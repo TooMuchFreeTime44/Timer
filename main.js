@@ -536,7 +536,7 @@ function drawTime() {
         }
         if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
             let xOffset = ((-height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
-            fill(mainBlueColor);
+            fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), 255);
             text(timeString, width / 2 + xOffset, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset, height / 8);
@@ -546,7 +546,7 @@ function drawTime() {
             fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
-            fill(mainBlueColor);
+            fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), 255);
             text(timeString, width / 2 - height / 19, height / 8);
             text(milliString, width / 2 + height / 6.6, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
@@ -575,20 +575,33 @@ function drawTime() {
         }
         if (majorSwitchAnimTime < majorSwitchTotalTime / 2) {
             let xOffset = ((height / 19) * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
-            fill(mainBlueColor);
+            fill(
+                red(mainBlueColor),
+                green(mainBlueColor),
+                blue(mainBlueColor),
+                255 * mainTimerOpacity
+            );
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
+            fill(0, 0, 0, 100);
+            if (min < 1) {
+                text("00:", width / 2 - height / 7.05 + xOffset, height / 8);
+            }
             let alphaVal = 255 - (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
             fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), alphaVal);
             text(milliString, width / 2 + height / 6.6, height / 8);
             fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
-            fill(mainBlueColor);
+            fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), 255);
             text(timeString, width / 2, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2, height / 8);
+            fill(0, 0, 0, 100);
+            if (min < 1) {
+                text("00:", width / 2 - height / 11.22, height / 8);
+            }
         }
     }
     pop();
