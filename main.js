@@ -542,7 +542,6 @@ function drawTime() {
             text(timeString, width / 2 + xOffset, height / 8);
             let alphaVal = (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
             fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), alphaVal);
-            text(milliString, width / 2 + height / 6.6, height / 8);
             fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
@@ -584,15 +583,13 @@ function drawTime() {
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2 + xOffset - height / 19, height / 8);
-            textSize(height / 12);
-            fill(0, 0, 0, 128);
+            fill(128);
             if (min < 1) {
                 text("00:", width / 2 - height / 7.05 + xOffset, height / 8);
             }
             textSize(height / 12);
             let alphaVal = 255 - (255 * majorSwitchAnimTime) / (majorSwitchTotalTime / 2);
             fill(red(mainBlueColor), green(mainBlueColor), blue(mainBlueColor), alphaVal);
-            text(milliString, width / 2 + height / 6.6, height / 8);
             fill(255, 255, 255, alphaVal * mainTimerOpacity);
             text(milliString, width / 2 + height / 6.6, height / 8);
         } else {
@@ -600,10 +597,20 @@ function drawTime() {
             text(timeString, width / 2, height / 8);
             fill(255, 255, 255, 255 * mainTimerOpacity);
             text(timeString, width / 2, height / 8);
-            textSize(height / 12);
-            fill(0, 0, 0, 128);
             if (min < 1) {
+                push();
+                rectMode(CENTER);
+                fill(
+                    lerpColor(
+                        defaultBgColor,
+                        timingBgColor,
+                        majorSwitchAnimTime / (majorSwitchTotalTime * 2)
+                    )
+                );
+                rect(width / 2 - height / 11, height / 8.5, height / 8.08, height / 11.5);
+                fill(128);
                 text("00:", width / 2 - height / 11.22, height / 8);
+                pop();
             }
         }
     }
