@@ -108,6 +108,7 @@ let mainButtonBlueCorners;
 let mainButtonRedCorners;
 let mainTimerOpacity = 1;
 let mainBlueColor;
+let lapFlashOpacity = 0;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -123,6 +124,7 @@ function setup() {
 }
 
 function draw() {
+    lapFlashOpacity *= 0.8;
     if (state === "timing" || state === "readyTimeNonzero") {
         let frictionThisFrame =
             lapScrollFrictionPerSec ** (deltaTime / overallTimeMultiplier / 1000);
@@ -359,6 +361,8 @@ function draw() {
             pauseButton.rad = mainButtonRedCorners;
             pauseButton.show();
         }
+        fill(255, 255, 255, 255 * lapFlashOpacity);
+        rect(0, 0, width, height);
     }
 }
 
@@ -419,6 +423,7 @@ function touchStarted() {
         lapDisplaySlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
+        lapFlashOpacity = 1;
     }
     return false;
 }
