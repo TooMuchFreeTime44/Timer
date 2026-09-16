@@ -109,6 +109,7 @@ let mainButtonRedCorners;
 let mainTimerOpacity = 1;
 let mainBlueColor;
 let lapFlashOpacity = 0;
+let newLapAnimTime = 1000;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -424,6 +425,7 @@ function touchStarted() {
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
         lapFlashOpacity = 1;
+        newLapAnimTime = 0;
     }
     return false;
 }
@@ -640,6 +642,7 @@ function drawTime() {
 }
 
 function drawLaps() {
+    newLapAnimTime += deltaTime;
     if (laps.length > 1) {
         let currBgColor;
         if (state === "timing") {
@@ -672,6 +675,8 @@ function drawLaps() {
             color(red(currBgColor), green(currBgColor), blue(currBgColor), 0).toString()
         );
         bottomMaskingGradient.addColorStop(1, color(currBgColor).toString());
+        let fastestLap = laps[1];
+        let slowestLap = laps[1];
         push();
         fill(255);
         textSize((height * 4) / 125);
@@ -760,8 +765,53 @@ function drawLaps() {
                 pop();
             }
         } else {
+            for (let i = 0; i < laps.length - 1; i++) {
+                if (laps[i] - laps[i - 1] > slowestLap) slowestLap = laps[i] - laps[i - 1];
+                if (laps[i] - laps[i - 1] < fastestLap) fastestLap = laps[i] - laps[i - 1];
+            }
             for (let i = 1; i < laps.length; i++) {
                 let ii = laps.length - i;
+                if (i === 1) {
+                    if (laps.length > 2) {
+                        if (laps[ii] - laps[ii - 1] - (laps[ii - 1] - laps[ii - 2]) > 0) {
+                            fill(
+                                lerpColor(
+                                    color(255, 130, 0),
+                                    color(255, 255, 255),
+                                    newLapAnimTime / 2500
+                                )
+                            );
+                        } else {
+                            fill(
+                                lerpColor(
+                                    color(0, 210, 100),
+                                    color(255, 255, 255),
+                                    newLapAnimTime / 2500
+                                )
+                            );
+                        }
+                    }
+                    if (laps[ii] - laps[ii - 1] > slowestLap) {
+                        fill(
+                            lerpColor(
+                                color(255, 40, 80),
+                                color(255, 255, 255),
+                                newLapAnimTime / 2500
+                            )
+                        );
+                    }
+                    if (laps[ii] - laps[ii - 1] < fastestLap) {
+                        fill(
+                            lerpColor(
+                                color(0, 190, 255),
+                                color(255, 255, 255),
+                                newLapAnimTime / 2500
+                            )
+                        );
+                    }
+                } else {
+                    fill(255);
+                }
                 let y =
                     height / 5 +
                     ((i - 1) * height * 4) / 75 +
