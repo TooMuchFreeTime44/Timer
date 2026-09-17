@@ -166,28 +166,14 @@ function draw() {
                 majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
-        if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
-            drawLaps();
-        } else {
-            laps = [0];
-            lapScrollOffset = 0;
-        }
-        if (lapSlideAnimTime < slideAnimTotalTime) {
-            lapButton.y = buttonStop3 - (buttonTravel3 / slideAnimTotalTime) * lapSlideAnimTime;
-            lapButton.show();
-        } else {
-            lapButton.y = buttonStop1;
-        }
-        if (resetAnimTime < (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
-            resetButton.y =
-                buttonStop2 -
-                (((buttonStop1 / slideAnimTotalTime) * buttonTravel1) / buttonTravel3) *
-                    resetAnimTime;
-            resetButton.show();
-        } else {
-            resetButton.y = buttonStop2;
-        }
         if (resetAnimTime < 350) {
+            let arcAmount =
+                ((time % 60000) / 60000 / 350) * (350 - resetAnimTime) * 2 * PI - 0.5 * PI;
+            stroke(255, 255, 255, 80);
+            strokeWeight(width / 40);
+            noFill();
+            arc(width / 2, height / 3, (width * 5) / 8, (width * 5) / 8, -0.5 * PI, arcAmount);
+            noStroke();
             let wipeX = (width * resetAnimTime) / 350;
             let smallOffset = width * 0.08;
             push();
@@ -213,6 +199,27 @@ function draw() {
         } else {
             time = 0;
             drawTime();
+        }
+        if (lapDisplaySlideAnimTime < lapDisplaySlideTotalTime) {
+            drawLaps();
+        } else {
+            laps = [0];
+            lapScrollOffset = 0;
+        }
+        if (lapSlideAnimTime < slideAnimTotalTime) {
+            lapButton.y = buttonStop3 - (buttonTravel3 / slideAnimTotalTime) * lapSlideAnimTime;
+            lapButton.show();
+        } else {
+            lapButton.y = buttonStop1;
+        }
+        if (resetAnimTime < (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
+            resetButton.y =
+                buttonStop2 -
+                (((buttonStop1 / slideAnimTotalTime) * buttonTravel1) / buttonTravel3) *
+                    resetAnimTime;
+            resetButton.show();
+        } else {
+            resetButton.y = buttonStop2;
         }
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
             startButton.rad =
@@ -267,6 +274,18 @@ function draw() {
                 majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
+        stroke(255, 255, 255, 80);
+        strokeWeight(width / 40);
+        noFill();
+        arc(
+            width / 2,
+            height / 3,
+            (width * 5) / 8,
+            (width * 5) / 8,
+            -0.5 * PI,
+            ((time % 60000) / 60000) * 2 * PI - 0.5 * PI
+        );
+        noStroke();
         drawLaps();
         if (lapSlideAnimTime < (slideAnimTotalTime * buttonTravel2) / buttonTravel3) {
             lapButton.y =
@@ -333,6 +352,18 @@ function draw() {
                 majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
+        stroke(255, 255, 255, 80);
+        strokeWeight(width / 40);
+        noFill();
+        arc(
+            width / 2,
+            height / 3,
+            (width * 5) / 8,
+            (width * 5) / 8,
+            -0.5 * PI,
+            ((time % 60000) / 60000) * 2 * PI - 0.5 * PI
+        );
+        noStroke();
         if (resetAnimTime < slideAnimTotalTime) {
             if (resetAnimTime > (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
                 resetButton.y =
