@@ -137,12 +137,14 @@ function draw() {
         let maxScroll =
             (height * 4) / 15 - ((laps.length - 1) * height * 4) / 75 + extraScrollMargin;
         let springMultiplier = 1;
+        let minScroll = -extraScrollMargin * 1.5;
+        if (maxScroll > minScroll) maxScroll = minScroll;
         if (lapScrollOffset < maxScroll) {
             lapScrollOffset = lerp(lapScrollOffset, maxScroll, 1 - scrollBoundPosSpring);
             lapScrollVel *= scrollBoundVelSpring;
         }
-        if (lapScrollOffset > -extraScrollMargin * 1.5) {
-            let displacement = (extraScrollMargin * 1.5 + lapScrollOffset) / height;
+        if (lapScrollOffset > minScroll) {
+            let displacement = (lapScrollOffset - minScroll) / height;
             lapScrollVel -= displacement * deltaTime * springMultiplier;
             lapScrollOffset = lerp(
                 lapScrollOffset,
