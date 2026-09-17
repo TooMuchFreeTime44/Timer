@@ -110,6 +110,7 @@ let mainTimerOpacity = 1;
 let mainBlueColor;
 let lapFlashOpacity = 0;
 let newLapAnimTime = 1000;
+let buttonHapticTime = 15;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -417,7 +418,7 @@ function touchStarted() {
         buttonSwitchPressY = mouseY;
         resetAnimTime = 0;
         lapSlideAnimTime = 0;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
         majorSwitchAnimTime = 0;
@@ -425,7 +426,7 @@ function touchStarted() {
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = (slideAnimTotalTime * buttonTravel1) / buttonTravel3;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         resetButton.y = buttonStop2;
@@ -434,7 +435,7 @@ function touchStarted() {
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = 0;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     } else if (state === "timing" && resetButton.isPressed()) {
         lapScrollVel = 0;
         state = "readyTimeZero";
@@ -444,19 +445,19 @@ function touchStarted() {
         resetAnimTime = 0;
         lapSlideAnimTime = 0;
         lapDisplaySlideAnimTime = 0;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
         lapScrollVel = 0;
         state = "readyTimeZero";
         resetAnimTime = 0;
         lapSlideAnimTime = slideAnimTotalTime;
         lapDisplaySlideAnimTime = 0;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     } else if (state === "timing" && lapButton.isPressed()) {
         laps.push(time);
         lapFlashOpacity = 1;
         newLapAnimTime = 0;
-        navigator.vibrate(50);
+        navigator.vibrate(buttonHapticTime);
     }
     return false;
 }
