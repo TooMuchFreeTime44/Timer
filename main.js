@@ -86,7 +86,7 @@ let majorSwitchTotalTime = 300;
 let majorSwitchAnimTime = 1000;
 let buttonSwitchPressX;
 let buttonSwitchPressY;
-let resetSlideAnimTime = 1000;
+let resetAnimTime = 1000;
 let lapSlideAnimTime = 1000;
 let lapDisplaySlideAnimTime = 1000;
 let lapDisplaySlideTotalTime = 450;
@@ -148,7 +148,7 @@ function draw() {
     }
     if (state === "readyTimeZero") {
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
-        resetSlideAnimTime += deltaTime / overallTimeMultiplier;
+        resetAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         lapDisplaySlideAnimTime += deltaTime / overallTimeMultiplier;
         background(
@@ -170,16 +170,42 @@ function draw() {
         } else {
             lapButton.y = buttonStop1;
         }
-        if (resetSlideAnimTime < (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
+        if (resetAnimTime < (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
             resetButton.y =
                 buttonStop2 -
                 (((buttonStop1 / slideAnimTotalTime) * buttonTravel1) / buttonTravel3) *
-                    resetSlideAnimTime;
+                    resetAnimTime;
             resetButton.show();
         } else {
             resetButton.y = buttonStop2;
         }
-        drawTime();
+        if (resetAnimTime < 350) {
+            let wipeX = (width * resetAnimTime) / 350;
+            let smallOffset = width * 0.08;
+            push();
+            drawingContext.beginPath();
+            drawingContext.rect(0, height / 8 - height / 20, wipeX - smallOffset, height / 10);
+            drawingContext.clip();
+            textStyle(BOLD);
+            textSize(height / 12);
+            fill(255);
+            text("00:00.000", width / 2, height / 8);
+            pop();
+            push();
+            drawingContext.beginPath();
+            drawingContext.rect(
+                wipeX + smallOffset,
+                height / 8 - height / 20,
+                width - wipeX,
+                height / 10
+            );
+            drawingContext.clip();
+            drawTime();
+            pop();
+        } else {
+            time = 0;
+            drawTime();
+        }
         if (majorSwitchAnimTime < majorSwitchTotalTime) {
             startButton.rad =
                 (majorSwitchAnimTime * (mainButtonBlueCorners - mainButtonRedCorners)) /
@@ -290,7 +316,7 @@ function draw() {
     } else if (state === "timing") {
         time += deltaTime / overallTimeMultiplier;
         majorSwitchAnimTime += deltaTime / overallTimeMultiplier;
-        resetSlideAnimTime += deltaTime / overallTimeMultiplier;
+        resetAnimTime += deltaTime / overallTimeMultiplier;
         lapSlideAnimTime += deltaTime / overallTimeMultiplier;
         background(
             lerpColor(
@@ -299,12 +325,12 @@ function draw() {
                 majorSwitchAnimTime / (majorSwitchTotalTime * 2)
             )
         );
-        if (resetSlideAnimTime < slideAnimTotalTime) {
-            if (resetSlideAnimTime > (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
+        if (resetAnimTime < slideAnimTotalTime) {
+            if (resetAnimTime > (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
                 resetButton.y =
                     buttonStop1 +
                     (buttonTravel1 / ((slideAnimTotalTime * buttonTravel1) / buttonTravel3)) *
-                        (resetSlideAnimTime - (slideAnimTotalTime * buttonTravel2) / buttonTravel3);
+                        (resetAnimTime - (slideAnimTotalTime * buttonTravel2) / buttonTravel3);
             } else {
                 resetButton.y = buttonStop1;
             }
@@ -382,13 +408,14 @@ function touchStarted() {
     }
     if (state === "readyTimeZero" && startButton.isPressed()) {
         state = "timing";
+        time = 0;
         laps = [0];
         lapScrollOffset = 0;
         majorSwitchAnimTime = 0;
         timeOnStartForMilli = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
-        resetSlideAnimTime = 0;
+        resetAnimTime = 0;
         lapSlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && startButton.isPressed()) {
         state = "timing";
@@ -400,26 +427,24 @@ function touchStarted() {
     } else if (state === "timing" && pauseButton.isPressed()) {
         state = "readyTimeNonzero";
         resetButton.y = buttonStop2;
-        resetSlideAnimTime = slideAnimTotalTime;
+        resetAnimTime = slideAnimTotalTime;
         majorSwitchAnimTime = 0;
         buttonSwitchPressX = mouseX;
         buttonSwitchPressY = mouseY;
         lapSlideAnimTime = 0;
     } else if (state === "timing" && resetButton.isPressed()) {
-        time = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
         majorSwitchAnimTime = 0;
         buttonSwitchPressX = pauseButton.x;
         buttonSwitchPressY = pauseButton.y;
-        resetSlideAnimTime = 0;
+        resetAnimTime = 0;
         lapSlideAnimTime = 0;
         lapDisplaySlideAnimTime = 0;
     } else if (state === "readyTimeNonzero" && resetButton.isPressed()) {
-        time = 0;
         lapScrollVel = 0;
         state = "readyTimeZero";
-        resetSlideAnimTime = 0;
+        resetAnimTime = 0;
         lapSlideAnimTime = slideAnimTotalTime;
         lapDisplaySlideAnimTime = 0;
     } else if (state === "timing" && lapButton.isPressed()) {
