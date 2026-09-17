@@ -109,6 +109,8 @@ let mainBlueColor;
 let lapFlashOpacity = 0;
 let newLapAnimTime = 1000;
 let buttonHapticTime = 10;
+let scrollBoundPosSpring = 0.86;
+let scrollBoundVelSpring = 0.81;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -135,14 +137,18 @@ function draw() {
             (height * 4) / 15 - ((laps.length - 1) * height * 4) / 75 + extraScrollMargin;
         let springMultiplier = 1;
         if (lapScrollOffset < maxScroll) {
-            lapScrollOffset = lerp(lapScrollOffset, maxScroll, 0.11);
-            lapScrollVel *= 0.8;
+            lapScrollOffset = lerp(lapScrollOffset, maxScroll, 1 - scrollBoundPosSpring);
+            lapScrollVel *= scrollBoundVelSpring;
         }
         if (lapScrollOffset > -extraScrollMargin * 1.5) {
             let displacement = (extraScrollMargin * 1.5 + lapScrollOffset) / height;
             lapScrollVel -= displacement * deltaTime * springMultiplier;
-            lapScrollOffset = lerp(lapScrollOffset, -extraScrollMargin * 1.5, 0.11);
-            lapScrollVel *= 0.8;
+            lapScrollOffset = lerp(
+                lapScrollOffset,
+                -extraScrollMargin * 1.5,
+                1 - scrollBoundPosSpring
+            );
+            lapScrollVel *= scrollBoundVelSpring;
         }
     }
     if (state === "timing" || state === "readyTimeZero") {
