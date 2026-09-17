@@ -133,13 +133,16 @@ function draw() {
         let extraScrollMargin = height / 60;
         let maxScroll =
             (height * 4) / 15 - ((laps.length - 1) * height * 4) / 75 + extraScrollMargin;
+        let springMultiplier = 1;
         if (lapScrollOffset < maxScroll) {
-            lapScrollOffset = maxScroll;
-            lapScrollVel = 0;
+            lapScrollOffset = lerp(lapScrollOffset, maxScroll, 0.11);
+            lapScrollVel *= 0.8;
         }
         if (lapScrollOffset > -extraScrollMargin * 1.5) {
-            lapScrollOffset = -extraScrollMargin * 1.5;
-            lapScrollVel = 0;
+            let displacement = (extraScrollMargin * 1.5 + lapScrollOffset) / height;
+            lapScrollVel -= displacement * deltaTime * springMultiplier;
+            lapScrollOffset = lerp(lapScrollOffset, -extraScrollMargin * 1.5, 0.11);
+            lapScrollVel *= 0.8;
         }
     }
     if (state === "timing" || state === "readyTimeZero") {
