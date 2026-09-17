@@ -108,7 +108,7 @@ let mainTimerOpacity = 1;
 let mainBlueColor;
 let lapFlashOpacity = 0;
 let newLapAnimTime = 1000;
-let buttonHapticTime = 8;
+let buttonHapticTime = 10;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
