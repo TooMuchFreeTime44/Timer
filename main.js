@@ -363,6 +363,10 @@ function draw() {
             -0.5 * PI,
             ((time % 60000) / 60000) * 2 * PI - 0.5 * PI
         );
+        if (time % 60000 < 200 && time > 60000) {
+            stroke(255, 255, 255, 80 - (2 * (time % 60000)) / 5);
+            circle(width / 2, height / 3, (width * 5) / 8);
+        }
         noStroke();
         if (resetAnimTime < slideAnimTotalTime) {
             if (resetAnimTime > (slideAnimTotalTime * buttonTravel1) / buttonTravel3) {
