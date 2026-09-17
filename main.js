@@ -111,6 +111,7 @@ let newLapAnimTime = 1000;
 let buttonHapticTime = 10;
 let scrollBoundPosSpring = 0.86;
 let scrollBoundVelSpring = 0.81;
+let minuteArcRad;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -169,10 +170,11 @@ function draw() {
         if (resetAnimTime < 350) {
             let arcAmount =
                 ((time % 60000) / 60000 / 350) * (350 - resetAnimTime) * 2 * PI - 0.5 * PI;
-            stroke(255, 255, 255, 80);
+            let alphaVal = 80 - (resetAnimTime * 80) / 350;
+            stroke(255, 255, 255, alphaVal);
             strokeWeight(width / 40);
             noFill();
-            arc(width / 2, height / 3, (width * 5) / 8, (width * 5) / 8, -0.5 * PI, arcAmount);
+            arc(width / 2, height / 3, minuteArcRad, minuteArcRad, -0.5 * PI, arcAmount);
             noStroke();
             let wipeX = (width * resetAnimTime) / 350;
             let smallOffset = width * 0.08;
@@ -280,8 +282,8 @@ function draw() {
         arc(
             width / 2,
             height / 3,
-            (width * 5) / 8,
-            (width * 5) / 8,
+            minuteArcRad,
+            minuteArcRad,
             -0.5 * PI,
             ((time % 60000) / 60000) * 2 * PI - 0.5 * PI
         );
@@ -358,8 +360,8 @@ function draw() {
         arc(
             width / 2,
             height / 3,
-            (width * 5) / 8,
-            (width * 5) / 8,
+            minuteArcRad,
+            minuteArcRad,
             -0.5 * PI,
             ((time % 60000) / 60000) * 2 * PI - 0.5 * PI
         );
@@ -524,6 +526,7 @@ function setButtons() {
     buttonTravel3 = buttonStop3 - buttonStop1;
     mainButtonBlueCorners = (height * 19) / 192;
     mainButtonRedCorners = height / 20;
+    minuteArcRad = (height * 2) / 7;
     startButton = new Button(
         width / 2,
         (height * 119) / 192,
