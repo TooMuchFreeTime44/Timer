@@ -26,7 +26,6 @@ class Button {
         this.textHeight = textHeight;
         this.blackText = blackText;
         this.boldText = boldText;
-        this.activated = true;
     }
 
     show() {
@@ -60,7 +59,6 @@ class Button {
 
     isPressed() {
         return (
-            this.activated &&
             mouseX > this.x - this.w / 2 &&
             mouseX < this.x + this.w / 2 &&
             mouseY > this.y - this.h / 2 &&
@@ -110,7 +108,7 @@ let mainTimerOpacity = 1;
 let mainBlueColor;
 let lapFlashOpacity = 0;
 let newLapAnimTime = 1000;
-let buttonHapticTime = 15;
+let buttonHapticTime = 8;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
